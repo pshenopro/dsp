@@ -1,0 +1,4 @@
+{
+  "port": 80,
+  "backApi": "http://clientboard.mediainstinctgroup.ru/"
+}
