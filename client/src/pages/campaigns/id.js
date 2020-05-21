@@ -28,11 +28,11 @@ export default (props) => {
             const data = await req(history.location.pathname, 'POST', {opt:{mtd: "GET"}, body: null});
             setstate(data);
 
-            // const prev = await req(`/advertisers/${data.advertiserId}`, 'POST', {opt:{mtd: "GET"}, body: null});
-            // setNames({
-            //     name: data.name,
-            //     prev: prev.name
-            // });
+            const prev = await req(`/advertisers/${data.advertiserId}`, 'POST', {opt:{mtd: "GET"}, body: null});
+            setNames({
+                name: data.name,
+                prev: prev.name
+            });
         } catch (e) {
             message('Server Error');
             history.push('/advertisers')
