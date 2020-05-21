@@ -10,7 +10,7 @@ const Item = ({name, id, balance, changeEdit}) => {
             <td>{id}</td>
             <td>{balance} руб.</td>
             <td>
-                <a onClick={() => changeEdit(id, balance)} className="btn-edit btn-floating btn-small waves-effect waves-light teal lighten-2">
+                <a onClick={() => changeEdit(id, name, balance)} className="btn-edit btn-floating btn-small waves-effect waves-light teal lighten-2">
                     <i className="material-icons">mode_edit</i>
                 </a>
             </td>

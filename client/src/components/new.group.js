@@ -2,17 +2,20 @@ import React, {useState} from "react";
 import PropTypes from 'prop-types'
 
 
-const Group = ({closeNew, submit}) => {
+const Group = ({closeNew, submit, cost}) => {
 
     let [state, setState] = useState({
         name: '',
         budget: 0,
+        balance: 0,
     });
+
+    console.log(state)
 
     let changeInp = (event, name) => {
         event.persist();
 
-        if (event.target.name === 'budget' && event.target.value === '') {
+        if (event.target.name === `${cost}` && event.target.value === '') {
             setState(
                 prev => ({
                     ...prev,
@@ -29,7 +32,7 @@ const Group = ({closeNew, submit}) => {
             prev => ({
                 ...prev,
                 ...{
-                    [event.target.name]: event.target.name === 'budget' ? parseInt(event.target.value) : event.target.value
+                    [event.target.name]: event.target.name === `${cost}` ? parseInt(event.target.value) : event.target.value
                 }
             })
         )
@@ -55,12 +58,12 @@ const Group = ({closeNew, submit}) => {
                             autoComplete={'off'}/>
                     </div>
                     <div className="field">
-                        <p>budget</p>
+                        <p>{cost}</p>
                         <input
                             type="text"
                             pattern="[0-9]*"
-                            name={'budget'}
-                            value={state.budget}
+                            name={cost}
+                            value={cost === 'budget' ? state.budget : state.balance}
                             onChange={changeInp}
                             autoComplete={'off'}/>
                     </div>
@@ -76,7 +79,8 @@ const Group = ({closeNew, submit}) => {
 
 Group.propTypes = {
     closeNew: PropTypes.func,
-    submit: PropTypes.func
+    submit: PropTypes.func,
+    cost: PropTypes.string,
 }
 
 export default Group;

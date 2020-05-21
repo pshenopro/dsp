@@ -109,7 +109,7 @@ export default (props) => {
             {list.totalPages > 1 ? <Pagination paginator={paginator} page={list.totalPages} /> : null}
 
             {modal ? <Edit changeEdit={changeEdit} submitEdit={submitEdit} editBody={editBody}/> : null}
-            {newGroup ? <Newgroup closeNew={closeGroup} submit={newSubmit} id={props.match.params.id}/> : null}
+            {newGroup ? <Newgroup closeNew={closeGroup} submit={newSubmit} cost={'budget'}/> : null}
         </div>
     )
 }

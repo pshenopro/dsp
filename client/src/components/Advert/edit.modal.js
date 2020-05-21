@@ -6,8 +6,7 @@ import {useHttp} from "../../hooks/http.hook";
 
 const EditModal = ({changeEdit, editBody, submitEdit}) => {
     const [state, setState] = useState({
-        name: '',
-        balance: '',
+        ...editBody
     });
     const message = useMessage();
     const {load, err, req, clear} = useHttp();

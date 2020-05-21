@@ -10,17 +10,18 @@ export const Advertisers = () => {
     const [modal, dispatch] = useState( false);
     const [newM, setM] = useState(false);
     const [state, setState] = useState([]);
-    const [editBody, setEditBody] = useState({id: null, name: '', balance: null,});
+    const [editBody, setEditBody] = useState(null);
 
     const message = useMessage();
     const {load, err, req, clear} = useHttp();
 
-    const openEdit = function (id,balance) {
+    const openEdit = function (id, name, balance) {
         dispatch(!modal);
 
         setEditBody(
             {
                 id: id,
+                name: name,
                 balance: balance,
             }
         );
@@ -63,10 +64,11 @@ export const Advertisers = () => {
     useEffect(() => {
         if (state.length === 0) {
             paginator(1);
+            message('Для корректной работы используете вкладку в инкогнито !')
         }
         message(err);
         clear()
-    }, [err, message, clear]);
+    }, [err, message, clear, state]);
 
 
     return (
@@ -81,7 +83,7 @@ export const Advertisers = () => {
             {state.totalPages > 1 ? <Pagination paginator={paginator} page={state.totalPages} /> : null}
 
             {modal ? <EditModal changeEdit={changeEdit} submitEdit={submitEdit} editBody={editBody} /> : null}
-            {newM ? <NewModal closeNew={closeNew} submit={newSubmit}/> : null}
+            {newM ? <NewModal closeNew={closeNew} submit={newSubmit} cost={'balance'}/> : null}
         </div>
     )
 }
