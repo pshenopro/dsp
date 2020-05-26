@@ -1,13 +1,16 @@
 import React, {useEffect, useState} from "react";
 import {NavLink, useHistory} from "react-router-dom";
+import {connect} from 'react-redux'
 import Newgroup from '../../components/new.group'
 import Pagination from '../../components/pagination'
 import Table from '../../components/Advent-slug/table'
 import Edit from '../../components/Advent-slug/edit.modal'
 import {useHttp} from "../../hooks/http.hook";
 import {useMessage} from "../../hooks/msg.hook";
+import {preloader, removeModal, setCurrentPage} from "../../redux/actions";
+import RemoveModal from "../../components/remove";
 
-export default (props) => {
+const AdvertId = (props) => {
     const [state, setState] = useState(null);
     const [list, setlist] = useState([]);
     const [newGroup, setnewGroup] = useState(false);
@@ -16,7 +19,7 @@ export default (props) => {
 
     const history= useHistory();
     const message = useMessage();
-    const {load, err, req, clear} = useHttp();
+    const {err, req, clear} = useHttp(props.preloader);
 
     const pageName = async () => {
         try {
@@ -43,33 +46,33 @@ export default (props) => {
         setModal(!modal);
     };
     const submitEdit = async (data) => {
+        const post = await req(history.location.pathname + `/campaigns/${data.id}`, 'POST', {opt: {mtd: "PUT"}, body: data});
+        post.code === 200 ? message('SUCCESS') : message(post.message);
 
-        try {
-            const post = await req(history.location.pathname + `/campaigns/${data.id}`, 'POST', {opt: {mtd: "PUT"}, body: data});
-            message('SUCCESS');
-        } catch (e) {
-            message('HTTP error')
-        }
-
+        paginator(props.currentPage);
         setModal(!modal);
-        paginator(list.totalPages);
     }
 
     const closeGroup = (val) => {
         setnewGroup(val)
     }
     const newSubmit = async (state) => {
-        try {
-            const data = await req(`/advertisers/${props.match.params.id}/campaigns`, 'POST', {opt: {mtd: "POST"}, body: state});
-            message('new campaigns DONE');
+        const post = await req(`/advertisers/${props.match.params.id}/campaigns`, 'POST', {opt: {mtd: "POST"}, body: state});
+        post.code === 200 ? message('SUCCESS') : message(post.message);
 
-            paginator(list.totalPages);
-        } catch (e) {
-            message('HTTP error')
-        }
-
+        paginator(props.currentPage);
         setnewGroup(false)
     };
+
+    const removeEl = async (chose) => {
+        if (chose) {
+            const post = await req(history.location.pathname + `/campaigns/${props.removeItem.id}`, 'POST', {opt: {mtd: "DELETE"}, body: false});
+            post.code === 204 ? message('Deleted') : message(post.message);
+        }
+
+        props.removeModal('', '', false);
+        await paginator(props.currentPage);
+    }
 
     const paginator = async (page) => {
         try {
@@ -81,8 +84,12 @@ export default (props) => {
     }
 
     useEffect(() => {
-        pageName();
+        if (!state) {
+            pageName()
+        }
+
         if (list.length === 0) {
+            props.setCurrentPage(1);
             paginator(1);
         }
         message(err);
@@ -110,6 +117,22 @@ export default (props) => {
 
             {modal ? <Edit changeEdit={changeEdit} submitEdit={submitEdit} editBody={editBody}/> : null}
             {newGroup ? <Newgroup closeNew={closeGroup} submit={newSubmit} cost={'budget'}/> : null}
+            {props.removeItem.bool ? <RemoveModal removeEl={removeEl} name={props.removeItem.name} /> : ""}
         </div>
     )
-}
+};
+
+const mapStateToProps = state => {
+    return {
+        currentPage: state.store.currentPage,
+        removeItem: state.store.removeItem,
+    }
+};
+
+const mapDispatchToProps = {
+    preloader,
+    setCurrentPage,
+    removeModal
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(AdvertId)

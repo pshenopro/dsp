@@ -5,13 +5,12 @@ import {AppContext} from "../../context/AppContext";
 
 const EditModal = ({changeEdit, editBody, submitEdit}) => {
     const {status} = useContext(AppContext);
+    let counter = 1;
 
     const [state, setState] = useState({
         ...editBody
     });
     const [sts, setStatus] = useState([...status]);
-
-
 
     const changeInp = (event, name) => {
         event.persist();
@@ -67,6 +66,21 @@ const EditModal = ({changeEdit, editBody, submitEdit}) => {
         )
     };
 
+    useEffect(() => {
+        if (counter === 1) {
+            setStatus(
+                sts.map((el, index) => {
+                    if ((index + 1) === editBody.status) {
+                        el.val = true;
+                        return el;
+                    }
+                    el.val = false;
+                    return el;
+                })
+            );
+            counter--;
+        }
+    }, [])
 
     return (
         <div className={'modal-wrapper'}>

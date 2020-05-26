@@ -1,11 +1,12 @@
 import {useCallback, useState} from 'react';
+import {connect} from 'react-redux'
 
-export const useHttp = () => {
+export const useHttp = (preloader) => {
     const [load, setLoad] = useState(false);
     const [err, setErr] = useState(null);
 
     const req = useCallback(async (url, method = "GET", body = null, headers = {}) => {
-        setLoad(true);
+        preloader(true)
 
         try {
             if(body) {
@@ -16,11 +17,12 @@ export const useHttp = () => {
             const res = await fetch(url, {method, body, headers});
             const data = await res.json();
 
-            setLoad(false);
+            preloader(false)
 
             return data
         } catch (e) {
-            setLoad(false);
+            preloader(false)
+            console.log(e)
             setErr(e.message);
             throw new Error(e.message);
         }

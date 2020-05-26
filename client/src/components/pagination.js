@@ -1,27 +1,44 @@
 import React, {useEffect, useState} from "react";
+import {connect} from 'react-redux'
 import PropTypes from 'prop-types';
+import {setCurrentPage} from "../redux/actions";
 
-const Pagination = ({page, paginator}) => {
-
-    let [curr, setCurr] = useState(1);
-
+const Pagination = ({page, paginator, currentPage, setCurrentPage}) => {
     let numbersPage = page,
         numbersList = [];
     for (let i=0; i < numbersPage; i++) {
         numbersList.push(i + 1);
     }
 
+    const checkCur = (val) => {
+        setCurrentPage(currentPage + val)
+    }
+
+
+
     useEffect(() => {
-        paginator(curr);
-    }, [curr]);
+        paginator(currentPage);
+    }, [currentPage]);
 
     return (
         <ul className="pagination">
-            <li onClick={() => {setCurr( curr - 1)}} className={curr === 1 ? 'disabled' : 'waves-effect'}><a><i className="material-icons">chevron_left</i></a></li>
+            <button
+                type={'button'}
+                onClick={() => {checkCur(-1)}}
+                className={currentPage === 1 ? 'disabled' : 'waves-effect'}
+                disabled={currentPage === 1}>
+                <i className="material-icons">chevron_left</i>
+            </button>
 
-            {numbersList.map((el, index) => <li onClick={() => setCurr(el)} className={el === curr ? 'active' : 'waves-effect'} key={index}><a>{el}</a></li>)}
+            {numbersList.map((el, index) => <li onClick={() => setCurrentPage(el)} className={el === currentPage ? 'active' : 'waves-effect'} key={index}><a>{el}</a></li>)}
 
-            <li onClick={() => {setCurr( curr + 1)}} className={numbersPage === curr ? 'disabled' : 'waves-effect'}><a><i className="material-icons">chevron_right</i></a></li>
+            <button
+                type={'button'}
+                onClick={() => {checkCur(+1)}}
+                className={numbersPage === currentPage ? 'disabled' : 'waves-effect'}
+                disabled={numbersPage === currentPage}>
+                <i className="material-icons">chevron_right</i>
+            </button>
         </ul>
     )
 };
@@ -31,4 +48,14 @@ Pagination.prototype = {
     paginator: PropTypes.func
 };
 
-export default Pagination;
+const mapStateToProps = state => {
+    return {
+        currentPage: state.store.currentPage
+    }
+};
+
+const mapDispatchToProps = {
+    setCurrentPage
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Pagination);

@@ -21,5 +21,42 @@ export const AppContext = React.createContext({
             name: 'Completed',
             val: false,
         }
+    ],
+    typeTv: [
+        {
+            name: 'Banner',
+            val: false,
+        },
+        {
+            name: 'Video',
+            val: false,
+        },
+    ],
+    typePlaceTv: [
+        {
+            name: 'In-Stream',
+            val: false,
+            dis: false,
+        },
+        {
+            name: 'In-Banner',
+            val: false,
+            dis: false,
+        },
+        {
+            name: 'In-Article',
+            val: false,
+            dis: false,
+        },
+        {
+            name: 'In-Feed',
+            val: false,
+            dis: false,
+        },
+        {
+            name: 'Interstitial/Slider/Floating',
+            val: false,
+            dis: false,
+        },
     ]
 });

@@ -5,11 +5,24 @@ import 'materialize-css/dist/css/materialize.min.css';
 import './index.scss';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import {compose, createStore} from "redux";
+import {Provider} from 'react-redux'
+import {rootRedux} from "./redux/rootRedux";
+
+const store = createStore(rootRedux, compose(
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+));
+
+const app = (
+    <Provider store={store}>
+        <React.StrictMode>
+            <App />
+        </React.StrictMode>
+    </Provider>
+)
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  app,
   document.getElementById('root')
 );
 

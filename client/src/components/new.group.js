@@ -10,8 +10,6 @@ const Group = ({closeNew, submit, cost}) => {
         balance: 0,
     });
 
-    console.log(state)
-
     let changeInp = (event, name) => {
         event.persist();
 

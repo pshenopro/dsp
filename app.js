@@ -27,9 +27,9 @@ app.use((req, res, next) => {
 });
 
 app.use(pathHttp, (req, res, next) => {
-    if (pathHttp === '/') {
-        return;
-    }
+    // if (pathHttp === '/') {
+    //     return;
+    // }
 
     let data,
         opt,
@@ -37,40 +37,40 @@ app.use(pathHttp, (req, res, next) => {
 
     opt = {...req.body.opt};
     data = { ...req.body.body };
+    console.log(data)
+    console.log(data && opt.mtd !== 'GET');
 
-    console.log('url ', pathHttp);
     request({
-        // url: posts[pathHttp].method === 'PUT' ? backAPI + posts[pathHttp].url + `/${data.id}` : backAPI + posts[pathHttp].url + id,
         url: opt.param ? backAPI + pathHttp + opt.param : backAPI + pathHttp,
         method: opt.mtd,
         json: data,   // <--Very important!!!
-        body: data && opt.mtd !== 'GET',
-        preambleCRLF: true,
-        postambleCRLF: true,
+        body: data && (opt.mtd !== 'GET' && opt.mtd !== 'DELETE'),
+        // preambleCRLF: true,
+        // postambleCRLF: true,
     }, function (error, response, body) {
         if (error) {
             res.status(500);
             res.json({message: 'SERVER ERROR'});
             next();
-
             return
         }
 
-        console.log('status ', response.statusMessage);
+        console.log('url ', pathHttp);
+        console.log('code ', response.statusCode);
 
-        if (response.statusCode === '500') {
-            console.log('status ', response.statusMessage);
-            console.log('code ', response.statusCode);
-            console.log('body  ', response.body);
-
-            res.json(response.body);
-
-            return res.status(500);
+        if (response.statusCode === 500 || response.statusCode === 400) {
+            res.status(response.statusCode);
+            res.json({message: response.statusMessage, code: response.statusCode, data:response.body});
+            return
         }
 
+        if (!response.body) {
+            res.status(200);
+            res.json({code: 204});
+            return
+        }
 
         res.json(response.body);
-
         return res.status(200);
     });
 
@@ -78,7 +78,5 @@ app.use(pathHttp, (req, res, next) => {
 });
 
 const PORT = config.get('port') || 5000;
-
-
 app.listen(PORT, () => console.log('server start.... port - ' + PORT));
 

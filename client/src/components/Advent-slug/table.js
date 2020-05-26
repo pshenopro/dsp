@@ -13,7 +13,9 @@ const Table = ({changeEdit, state}) => {
                     <th>Status</th>
                     <th>ID</th>
                     <th>Advertiser ID</th>
+                    <th>Budget Spent</th>
                     <th>budget</th>
+                    <th>frequency <br/>Cap</th>
                     <th> </th>
                 </tr>
                 </thead>

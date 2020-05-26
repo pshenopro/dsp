@@ -1,55 +1,22 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
+import {AppContext} from "../../context/AppContext";
 import PropTypes from 'prop-types'
 
 
 const Group = ({closeNew, submit}) => {
+    const {typeTv, typePlaceTv} = useContext(AppContext);
 
-    let [state, setState] = useState({
+    const [state, setState] = useState({
         name: '',
         budget: 0,
         url: '',
         frequency: '',
         bidprice: 0,
     });
-    let [status, setStatus] = useState([
-        {
-            name: 'Banner',
-            val: false,
-        },
-        {
-            name: 'Video',
-            val: false,
-        },
-    ]);
-    let [place, setPlace] = useState([
-        {
-            name: 'In-Stream',
-            val: false,
-            dis: false,
-        },
-        {
-            name: 'In-Banner',
-            val: false,
-            dis: false,
-        },
-        {
-            name: 'In-Article',
-            val: false,
-            dis: false,
-        },
-        {
-            name: 'In-Feed',
-            val: false,
-            dis: false,
-        },
-        {
-            name: 'Interstitial/Slider/Floating',
-            val: false,
-            dis: false,
-        },
-    ]);
+    const [statusTv, setStatusTv] = useState([...typeTv]);
+    const [placeTv, setPlaceTv] = useState([...typePlaceTv]);
 
-    let changeInp = (event, name) => {
+    const changeInp = (event, name) => {
         event.persist();
 
         if (event.target.name === name && event.target.value === '') {
@@ -74,8 +41,8 @@ const Group = ({closeNew, submit}) => {
         )
     };
     const handleStatus = (event) => {
-        setStatus(
-            status.map((el, index) => {
+        setStatusTv(
+            statusTv.map((el, index) => {
                 if (index === parseInt(event.target.value)) {
                     el.val = true;
 
@@ -87,8 +54,8 @@ const Group = ({closeNew, submit}) => {
         )
     };
     const handlePlace = (event) => {
-        setPlace(
-            place.map((el, index) => {
+        setPlaceTv(
+            placeTv.map((el, index) => {
                 if (index === parseInt(event.target.value)) {
                     el.val = true;
                     return el
@@ -107,8 +74,8 @@ const Group = ({closeNew, submit}) => {
             ...state,
         };
 
-        status.map((el, index) => el.val ? data.type = index : '');
-        if (status[1].val) {place.map((el, index) => el.val ? data.placement = index + 1 : '')}
+        statusTv.map((el, index) => el.val ? data.type = index : '');
+        if (statusTv[1].val) {placeTv.map((el, index) => el.val ? data.placement = index + 1 : '')}
 
         submit(data)
     };
@@ -169,9 +136,9 @@ const Group = ({closeNew, submit}) => {
                 </div>
                 <div className="modal-content wrapper-fields">
                     <div className="field-one">
-                        <p>type</p>
+                        <p>type*</p>
                         <div className={'wrapper-status'}>
-                            {status.map((el, index, arr) =>
+                            {statusTv.map((el, index, arr) =>
                                 <p key={index}>
                                     <label form={'status-' + index}>
                                         <input
@@ -193,7 +160,7 @@ const Group = ({closeNew, submit}) => {
                     <div className="field-one">
                         <p>placement</p>
                         <div className={'wrapper-status'}>
-                            {place.length ? place.map((el, index, arr) => {
+                            {placeTv.length ? placeTv.map((el, index, arr) => {
                                 return (
                                     <p key={index}>
                                         <label form={'place-' + index}>
@@ -205,7 +172,7 @@ const Group = ({closeNew, submit}) => {
                                                 onChange={handlePlace}
                                                 value={index}
                                                 checked={el.val}
-                                                disabled={status[0].val}/>
+                                                disabled={statusTv[0].val}/>
                                             <span>{el.name}</span>
                                         </label>
                                     </p>
@@ -217,7 +184,7 @@ const Group = ({closeNew, submit}) => {
                 </div>
                 <div className="modal-footer btn-wrapper">
                     <button type={"button"} onClick={() => closeNew(false)} className="waves-effect waves-light red btn-small btn">CANCEL</button>
-                    <button type={"submit"} className="waves-effect waves-light btn-small btn" disabled={!state.name.length}>Submit</button>
+                    <button type={"submit"} className="waves-effect waves-light btn-small btn" disabled={!state.name.length || (!statusTv[0].val && !statusTv[1].val)}>Submit</button>
                 </div>
             </form>
         </div>
