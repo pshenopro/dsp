@@ -61,6 +61,11 @@ export const Advertisers = ({post, preloader, currentPage, setCurrentPage, remov
         await paginator(currentPage);
     }
 
+    const sort = async (sort) => {
+        const data = await req(`/advertisers`, 'POST', {opt: {mtd: "GET",param: `?page=${currentPage}&pageCount=30&orderBy=${sort}`}, body: null});
+        setState(data);
+    }
+
     const paginator = async (page = currentPage) => {
         const data = await req(`/advertisers`, 'POST', {opt: {mtd: "GET",param: `?page=${page}&pageCount=30`}, body: null});
         setState(data);
@@ -84,7 +89,7 @@ export const Advertisers = ({post, preloader, currentPage, setCurrentPage, remov
                 <a onClick={() => setM(true)} className="waves-effect waves-light btn-middle btn lighten-2"><i className="material-icons">add</i> <span>new Advertisers</span></a>
             </div>
 
-            {typeof state.data === 'object' ? <Table state={state.data} changeEdit={openEdit}/> : null}
+            {typeof state.data === 'object' ? <Table state={state.data} changeEdit={openEdit} sort={sort}/> : null}
 
             {state.totalPages > 1 ? <Pagination paginator={paginator} page={state.totalPages} /> : null}
 

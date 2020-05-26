@@ -58,6 +58,26 @@ body {
         padding-right: 25px;
     }
     table {
+        th {
+            .sort {
+                display: inline-block;
+                cursor: pointer;
+                transition: all .3s;
+
+                i {
+                    transition: all .3s;
+                }
+
+                &:hover {
+                    i {
+                        transform: translateY(5px);
+                    }
+                }
+            }
+            .sort.active {
+                color: #ff3d00;
+            }
+        }
 
         td,
         th {
