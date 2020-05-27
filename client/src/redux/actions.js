@@ -1,4 +1,4 @@
-import {ADVERT_POST, CURRENTPAGE, PRELOADER, REMOVE_MODAL} from "./type";
+import {ADVERT_POST, CURRENTPAGE, PRELOADER, REMOVE_MODAL, SORT_BY} from "./type";
 
 export function advertsFetch (post) {
     return {
@@ -21,8 +21,16 @@ export function setCurrentPage(num) {
     }
 }
 
+export function sortingBy(val) {
+    return {
+        type: SORT_BY,
+        payload: val
+    }
+}
+
 export function removeModal(id, name, bool) {
     document.getElementsByTagName('body')[0].style.overflow = bool ? 'hidden' : 'visible';
+
     return {
         type: REMOVE_MODAL,
         payload: {

@@ -2,10 +2,9 @@ import React from "react";
 import PropTypes from 'prop-types';
 
 
-const Sort = ({name, sortBy, sort, setActive, active}) => {
+const Sort = ({name, setActive, active}) => {
     const submit = () => {
         setActive(name);
-        sort(sortBy);
     };
 
     return (
@@ -16,8 +15,6 @@ const Sort = ({name, sortBy, sort, setActive, active}) => {
 Sort.propTypes = {
     name: PropTypes.string,
     active: PropTypes.string,
-    sortBy: PropTypes.string,
-    sort: PropTypes.func,
 };
 
 export default Sort;

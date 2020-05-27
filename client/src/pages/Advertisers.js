@@ -1,15 +1,16 @@
 import React, {useEffect, useState} from "react";
 import {connect} from 'react-redux'
-import Table from '../components/Advert/table'
+import TableThead from '../components/table.thead'
 import EditModal from '../components/Advert/edit.modal'
 import NewModal from '../components/new.group'
 import Pagination from '../components/pagination'
 import {useMessage} from "../hooks/msg.hook";
 import {useHttp} from "../hooks/http.hook";
-import {preloader, removeModal, setCurrentPage} from "../redux/actions";
+import {preloader, removeModal, setCurrentPage, sortingBy} from "../redux/actions";
 import RemoveModal from '../components/remove'
+import TableList from "../components/Advert/tablelist";
 
-export const Advertisers = ({post, preloader, currentPage, setCurrentPage, removeItem, removeModal}) => {
+export const Advertisers = ({preloader, currentPage, setCurrentPage, removeItem, removeModal, currentSort, sortingBy}) => {
     const [modal, dispatch] = useState( false);
     const [newM, setM] = useState(false);
     const [state, setState] = useState([]);
@@ -17,6 +18,8 @@ export const Advertisers = ({post, preloader, currentPage, setCurrentPage, remov
 
     const message = useMessage();
     const {err, req, clear} = useHttp(preloader);
+
+    const sortThead = [{name:'Name', sort: 'name'},{name:'ID', sort: 'id'},{name:'Balance', sort: 'balance'}]
 
     const openEdit = function (id, name, balance) {
         dispatch(!modal);
@@ -37,14 +40,14 @@ export const Advertisers = ({post, preloader, currentPage, setCurrentPage, remov
         post.code === 200 ? message('SUCCESS') : message(post.message);
 
         dispatch(!modal);
-        paginator(currentPage);
+        paginator();
     }
 
     const newSubmit = async (data) => {
         const post = await req('/advertisers', 'POST', {opt: {mtd: "POST"}, body: data});
         post.code === 200 ? message('SUCCESS') : message(post.message);
 
-        await paginator(currentPage);
+        await paginator();
         setM(false)
     };
     const closeNew = function () {
@@ -58,23 +61,18 @@ export const Advertisers = ({post, preloader, currentPage, setCurrentPage, remov
       }
 
         removeModal('', '', false);
-        await paginator(currentPage);
+        await paginator();
     }
 
-    const sort = async (sort) => {
+    const paginator = async (sort = currentSort.name + currentSort.dir) => {
         const data = await req(`/advertisers`, 'POST', {opt: {mtd: "GET",param: `?page=${currentPage}&pageCount=30&orderBy=${sort}`}, body: null});
-        setState(data);
-    }
-
-    const paginator = async (page = currentPage) => {
-        const data = await req(`/advertisers`, 'POST', {opt: {mtd: "GET",param: `?page=${page}&pageCount=30`}, body: null});
         setState(data);
     }
 
     useEffect(() => {
         if (state.length === 0) {
             setCurrentPage(1);
-            paginator(1);
+            paginator();
             message('Для корректной работы используете вкладку в инкогнито !')
         }
         message(err);
@@ -84,19 +82,31 @@ export const Advertisers = ({post, preloader, currentPage, setCurrentPage, remov
 
     return (
         <div className={'page advertisers-page'}>
+            {/*HEADER*/}
             <div className="head">
                 <h1>Advertisers</h1>
                 <a onClick={() => setM(true)} className="waves-effect waves-light btn-middle btn lighten-2"><i className="material-icons">add</i> <span>new Advertisers</span></a>
             </div>
+            {/*HEADER OFF*/}
 
-            {typeof state.data === 'object' ? <Table state={state.data} changeEdit={openEdit} sort={sort}/> : null}
+            {/*TABLE*/}
+            <div className={'z-depth-3 table-wrapper'}>
+                <table className={'highlight'}>
+                    {state.data ? <TableThead sortingBy={sortingBy} paginator={paginator} currentSort={currentSort} sortThead={sortThead}/> : null}
+                    {state.data ? <TableList changeEdit={openEdit} data={state.data} /> : null}
+                </table>
+            </div>
+            {/*TABLE OFF*/}
+
 
             {state.totalPages > 1 ? <Pagination paginator={paginator} page={state.totalPages} /> : null}
 
+            {/*MODALS*/}
             {modal ? <EditModal changeEdit={changeEdit} submitEdit={submitEdit} editBody={editBody} /> : null}
             {newM ? <NewModal closeNew={closeNew} submit={newSubmit} cost={'balance'}/> : null}
             {removeItem.bool ? <RemoveModal removeEl={removeEl} name={removeItem.name} /> : ""}
         </div>
+
     )
 };
 
@@ -105,13 +115,15 @@ const mapStateToProps = state => {
         post: state.store.posts.adverts,
         currentPage: state.store.currentPage,
         removeItem: state.store.removeItem,
+        currentSort: state.store.currentSort
     }
 };
 
 const mapDispatchToProps = {
     preloader,
     setCurrentPage,
-    removeModal
+    removeModal,
+    sortingBy
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Advertisers);

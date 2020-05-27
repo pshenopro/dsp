@@ -17,7 +17,7 @@ const Pagination = ({page, paginator, currentPage, setCurrentPage}) => {
 
 
     useEffect(() => {
-        paginator(currentPage);
+        paginator();
     }, [currentPage]);
 
     return (

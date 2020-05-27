@@ -4,9 +4,6 @@ import PropTypes from 'prop-types';
 
 
 const Tablelist = ({data, changeEdit}) => {
-
-
-
     return (
         <tbody>
             {data.length ? data.map((el, index) => <Item

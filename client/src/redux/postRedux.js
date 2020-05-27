@@ -1,4 +1,4 @@
-import {ADVERT_POST, CURRENTPAGE, PRELOADER, REMOVE_MODAL} from "./type";
+import {ADVERT_POST, CURRENTPAGE, PRELOADER, REMOVE_MODAL, SORT_BY} from "./type";
 
 const initial = {
     posts: {
@@ -10,6 +10,10 @@ const initial = {
         id: '',
         name: '',
         bool: false,
+    },
+    currentSort: {
+        name: 'name',
+        dir: ' asc'
     }
 }
 
@@ -35,6 +39,14 @@ export const postRedux = (state = initial, action) => {
                 ...state,
                 removeItem: {
                     ...action.payload,
+                },
+            };
+
+        case SORT_BY:
+            return {
+                ...state,
+                currentSort: {
+                    ...action.payload
                 },
             }
 
