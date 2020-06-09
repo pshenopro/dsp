@@ -59,6 +59,7 @@ app.use(pathHttp, (req, res, next) => {
         const file = req.files.positiveDomains;
         streamName = req.files.positiveDomains.name;
         streamFile = path.join(__dirname, 'client', 'public', streamName);
+        fs.unlinkSync(streamFile)
 
 
         file.mv(streamFile, function (err) {
