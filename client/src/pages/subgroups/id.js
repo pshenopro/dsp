@@ -13,7 +13,12 @@ const SubId = props => {
         nameSub: ''
     });
     const [state, setstate] = useState(null);
-    const [file, setFile] = useState(null)
+    const [file, setFile] = useState({
+        pDomain: {},
+        PApps: {},
+        nDomain: {},
+        nApps: {},
+    })
 
     const history = useHistory();
     const message = useMessage();
@@ -59,7 +64,7 @@ const SubId = props => {
         }
     };
 
-    const setPOST = async () => {
+    const setPOST = async (name, http) => {
         // const positiveapps = await req(history.location.pathname + '/positiveapps', 'POST', {
         //     opt:{
         //         mtd: "GET",
@@ -68,7 +73,7 @@ const SubId = props => {
         //     body: null
         // });
 
-        const positive = await req(history.location.pathname + '/positivedomains', 'POST', {
+        const post = await req(history.location.pathname + http, 'POST', {
             opt:{
                 mtd: "GET",
                 set: 'file'
@@ -76,7 +81,7 @@ const SubId = props => {
             body: null
         });
 
-        setFile(positive.file);
+        setFile([name].file = post.file);
     }
 
 

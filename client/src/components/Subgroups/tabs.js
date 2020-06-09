@@ -62,7 +62,7 @@ const Tabs = ({path, file, post}) => {
                         <div className="item-inner">
                             <h5>Domain</h5>
                             <div className='buttons-wrapper'>
-                                <span>{file ? <span onClick={() => handelrModal()}>{file}</span> : 'Пусто'}</span>
+                                <span>{file.pDomain.file ? <span onClick={() => handelrModal()}>{file.pDomain.file}</span> : 'Пусто'}</span>
                                 <div className="buttons">
                                     {/*<input*/}
                                     {/*    id="file-1"*/}
@@ -74,10 +74,10 @@ const Tabs = ({path, file, post}) => {
                                     {/*    hidden/>*/}
                                     {/*<label htmlFor="file-1" className='btn waves-effect waves-light btn-small btn teal lighten-1'>add</label>*/}
                                     {/*<button type="submit" className='btn waves-effect waves-light btn-small btn teal lighten-1'>upload</button>*/}
-                                    {file ? <a
-                                        href={'/' + file}
+                                    {file.pDomain.file ? <a
+                                        href={'/' + file.pDomain.file}
                                         className='btn waves-effect waves-light btn-small btn teal lighten-1'
-                                        download >download</a> : <button onClick={() => post()} type={'button'} className={'btn waves-effect waves-light btn-small btn teal lighten-1'}>
+                                        download >download</a> : <button onClick={() => post('pDomain', '/positivedomains')} type={'button'} className={'btn waves-effect waves-light btn-small btn teal lighten-1'}>
                                         <i className="material-icons small">vertical_align_bottom</i>
                                     </button>}
                                 </div>
@@ -86,22 +86,24 @@ const Tabs = ({path, file, post}) => {
                         <div className="item-inner">
                             <h5>Apps</h5>
                             <div className='buttons-wrapper'>
-                                <span>{pos.app.name}</span>
+                                <span>{file.PApps.file ? <span onClick={() => handelrModal()}>{file.PApps.file}</span> : 'Пусто'}</span>
                                 <div className="buttons">
                                     {/*<input*/}
-                                    {/*    id="file-2"*/}
+                                    {/*    id="file-1"*/}
                                     {/*    type="file"*/}
-                                    {/*    ref={pos.app.ref}*/}
+                                    {/*    ref={pos.dom.ref}*/}
                                     {/*    accept=".txt"*/}
-                                    {/*    name="app"*/}
-                                    {/*    onChange={(event) => changePos(event, pos.app.ref)}*/}
+                                    {/*    name="dom"*/}
+                                    {/*    onChange={(event) => changePos(event, pos.dom.ref)}*/}
                                     {/*    hidden/>*/}
-                                    {/*<label htmlFor="file-2" className='btn waves-effect waves-light btn-small btn teal lighten-1'>add</label>*/}
+                                    {/*<label htmlFor="file-1" className='btn waves-effect waves-light btn-small btn teal lighten-1'>add</label>*/}
                                     {/*<button type="submit" className='btn waves-effect waves-light btn-small btn teal lighten-1'>upload</button>*/}
-                                    <a
-                                        href={'/' + file}
+                                    {file.PApps.file ? <a
+                                        href={'/' + file.PApps.file}
                                         className='btn waves-effect waves-light btn-small btn teal lighten-1'
-                                        download >download</a>
+                                        download >download</a> : <button onClick={() => post('PApps', '/positiveapps')} type={'button'} className={'btn waves-effect waves-light btn-small btn teal lighten-1'}>
+                                        <i className="material-icons small">vertical_align_bottom</i>
+                                    </button>}
                                 </div>
                             </div>
                         </div>
@@ -113,30 +115,48 @@ const Tabs = ({path, file, post}) => {
                         <div className="item-inner">
                             <h5>Domain</h5>
                             <div className='buttons-wrapper'>
-                                <span>name_txt</span>
+                                <span>{file.nDomain.file ? <span onClick={() => handelrModal()}>{file.nDomain.file}</span> : 'Пусто'}</span>
                                 <div className="buttons">
-                                    {/*<input id="file-3" type="file" hidden/>*/}
-                                    {/*<label htmlFor="file-3" className='btn waves-effect waves-light btn-small btn teal lighten-1'>add</label>*/}
+                                    {/*<input*/}
+                                    {/*    id="file-1"*/}
+                                    {/*    type="file"*/}
+                                    {/*    ref={pos.dom.ref}*/}
+                                    {/*    accept=".txt"*/}
+                                    {/*    name="dom"*/}
+                                    {/*    onChange={(event) => changePos(event, pos.dom.ref)}*/}
+                                    {/*    hidden/>*/}
+                                    {/*<label htmlFor="file-1" className='btn waves-effect waves-light btn-small btn teal lighten-1'>add</label>*/}
                                     {/*<button type="submit" className='btn waves-effect waves-light btn-small btn teal lighten-1'>upload</button>*/}
-                                    <a
-                                        href={'/' + file}
+                                    {file.nDomain.file ? <a
+                                        href={'/' + file.nDomain.file}
                                         className='btn waves-effect waves-light btn-small btn teal lighten-1'
-                                        download >download</a>
+                                        download >download</a> : <button onClick={() => post('nDomain', '/negativedomains')} type={'button'} className={'btn waves-effect waves-light btn-small btn teal lighten-1'}>
+                                        <i className="material-icons small">vertical_align_bottom</i>
+                                    </button>}
                                 </div>
                             </div>
                         </div>
                         <div className="item-inner">
                             <h5>Apps</h5>
                             <div className='buttons-wrapper'>
-                                <span>name_txt</span>
+                                <span>{file.nApps.file ? <span onClick={() => handelrModal()}>{file.nApps.file}</span> : 'Пусто'}</span>
                                 <div className="buttons">
-                                    {/*<input id="file-4" type="file" hidden/>*/}
-                                    {/*<label htmlFor="file-4" className='btn waves-effect waves-light btn-small btn teal lighten-1'>add</label>*/}
+                                    {/*<input*/}
+                                    {/*    id="file-1"*/}
+                                    {/*    type="file"*/}
+                                    {/*    ref={pos.dom.ref}*/}
+                                    {/*    accept=".txt"*/}
+                                    {/*    name="dom"*/}
+                                    {/*    onChange={(event) => changePos(event, pos.dom.ref)}*/}
+                                    {/*    hidden/>*/}
+                                    {/*<label htmlFor="file-1" className='btn waves-effect waves-light btn-small btn teal lighten-1'>add</label>*/}
                                     {/*<button type="submit" className='btn waves-effect waves-light btn-small btn teal lighten-1'>upload</button>*/}
-                                    <a
-                                        href={'/' + file}
+                                    {file.nApps.file ? <a
+                                        href={'/' + file.nApps.file}
                                         className='btn waves-effect waves-light btn-small btn teal lighten-1'
-                                        download >download</a>
+                                        download >download</a> : <button onClick={() => post('nApps', '/negativeapps')} type={'button'} className={'btn waves-effect waves-light btn-small btn teal lighten-1'}>
+                                        <i className="material-icons small">vertical_align_bottom</i>
+                                    </button>}
                                 </div>
                             </div>
                         </div>
