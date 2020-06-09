@@ -3,7 +3,7 @@ import {NavLink, useHistory} from "react-router-dom";
 import {connect} from 'react-redux'
 import {useHttp} from "../../hooks/http.hook";
 import {useMessage} from "../../hooks/msg.hook";
-import {preloader, setCurrentPage} from "../../redux/actions";
+import {preloader} from "../../redux/actions";
 import Tabs from '../../components/Subgroups/tabs'
 
 const SubId = props => {
@@ -13,7 +13,12 @@ const SubId = props => {
         nameSub: ''
     });
     const [state, setstate] = useState(null);
-    const [file, setFile] = useState(null)
+    const [file, setFile] = useState({
+        pDomain: {},
+        PApps: {},
+        nDomain: {},
+        nApps: {},
+    })
 
     const history = useHistory();
     const message = useMessage();
@@ -53,41 +58,41 @@ const SubId = props => {
                 nameCamp: prev.name,
                 nameSub: data.name
             });
-
-
-
-            // let bodys = JSON.stringify({
-            //     opt:{
-            //         mtd: "GET",
-            //         set: 'file'
-            //         // head: {'Content-Type': 'application/octet-stream', 'Content-Disposition': 'attachment; filename="domain_list.txt'}
-            //     },
-            //     body: null
-            // })
-
-
-            // let response = await fetch(history.location.pathname + '/positivedomains', {
-            //     method: 'GET',
-            //     headers: {'Content-Type': 'application/octet-stream', 'Content-Disposition': 'attachment; filename="domain_list.txt'}
-            // });
-
-
-
-            const positive = await req(history.location.pathname + '/positivedomains', 'POST', {
-                opt:{
-                    mtd: "GET",
-                    set: 'file'
-                    },
-                body: null
-            });
-
-            setFile(positive.file);
-
         } catch (e) {
             message('Server Error');
-            // history.push('/advertisers')
+            history.push('/advertisers')
         }
     };
+
+    const setPOST = async (name, http) => {
+        // const positiveapps = await req(history.location.pathname + '/positiveapps', 'POST', {
+        //     opt:{
+        //         mtd: "GET",
+        //         set: 'file'
+        //     },
+        //     body: null
+        // });
+
+        const post = await req(history.location.pathname + http, 'POST', {
+            opt:{
+                mtd: "GET",
+                set: 'file'
+            },
+            body: null
+        });
+
+        setFile(
+            prev => ({
+                ...prev,
+                ...{
+                    [name]: {
+                        file: post.file
+                    }
+                }
+            })
+        );
+        console.log(file)
+    }
 
 
     useEffect(() => {
@@ -133,7 +138,7 @@ const SubId = props => {
                     </tbody>
                 </table>
 
-                <Tabs path={history.location.pathname} file={file}/>
+                <Tabs path={history.location.pathname} post={setPOST} file={file}/>
 
             </div>
             {/*CONTENT END*/}
@@ -142,15 +147,10 @@ const SubId = props => {
     )
 }
 
-const mapStateToProps = state => {
-    return {
-        currentPage: state.store.currentPage
-    }
-};
+
 
 const mapDispatchToProps = {
     preloader,
-    setCurrentPage
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SubId)
+export default connect(null, mapDispatchToProps)(SubId)
