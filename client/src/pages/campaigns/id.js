@@ -44,7 +44,6 @@ const CampaignsId =  (props) => {
         try {
             const data = await req(history.location.pathname, 'POST', {opt:{mtd: "GET"}, body: null});
             setstate(data);
-            console.log(history.location.pathname)
 
             if (data.code === 500) {
                 message(data.message);

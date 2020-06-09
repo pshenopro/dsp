@@ -42,7 +42,7 @@ app.use(pathHttp, (req, res, next) => {
         url: opt.param ? backAPI + pathHttp + opt.param : backAPI + pathHttp,
         method: opt.mtd,
         json: data,   // <--Very important!!!
-        headers: opt.head,
+        // headers: opt.head,
         body: data && (opt.mtd !== 'GET' && opt.mtd !== 'DELETE'),
 
     }, function (error, response, body) {
@@ -61,10 +61,12 @@ app.use(pathHttp, (req, res, next) => {
             fs.readFile(fp, "utf8", function(error,data){ });
             fs.writeFileSync(fp, response.body);
 
+            console.log(fp)
             console.log(response.body)
 
-            res.json({file: file});
+            res.json({file: file, test:fp});
             res.status(200);
+            res.end();
             return
         }
 

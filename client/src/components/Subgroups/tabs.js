@@ -11,6 +11,7 @@ const Tabs = ({path, file, post}) => {
             app: {name: 'name_txt.txt', ref: useRef()}
         }
     );
+    const [txt, setTxt] = useState('/')
     const handelrModal = () => {
         setModal(!modal)
     }
@@ -164,7 +165,7 @@ const Tabs = ({path, file, post}) => {
                 </div>
             </form>
 
-            {modal ? <Modal src={'/' + file} close={handelrModal} /> : null}
+            {modal ? <Modal src={'/' + txt} close={handelrModal} /> : null}
         </div>
     )
 };
