@@ -61,6 +61,8 @@ app.use(pathHttp, (req, res, next) => {
             fs.readFile(fp, "utf8", function(error,data){ });
             fs.writeFileSync(fp, response.body);
 
+            console.log(response.body)
+
             res.json({file: file});
             res.status(200);
             return

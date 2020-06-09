@@ -81,7 +81,17 @@ const SubId = props => {
             body: null
         });
 
-        setFile([name].file = post.file);
+        setFile(
+            prev => ({
+                ...prev,
+                ...{
+                    [name]: {
+                        file: post.file
+                    }
+                }
+            })
+        );
+        console.log(file)
     }
 
 

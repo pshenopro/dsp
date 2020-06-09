@@ -171,7 +171,7 @@ const Tabs = ({path, file, post}) => {
 
 Tabs.propsType = {
     path: PropTypes.string,
-    file: PropTypes.string,
+    file: PropTypes.Object,
     post: PropTypes.func,
 };
 
