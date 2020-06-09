@@ -164,12 +164,14 @@ app.use(pathHttp, (req, res, next) => {
             .headers({'Content-Type': 'multipart/form-data'})
             .attach('positiveDomains', streamFile)
             .then((ress) => {
-                console.log('POST - ', ress.body)
+                console.log('POST - ', ress.body);
+                return ress.body
             });
 
         onLoadStream = false;
 
         res.status(200);
+        res.json(mypost);
         res.end();
         return;
     }
