@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from "react";
 import {connect} from 'react-redux'
 import TableThead from '../components/table.thead'
-import EditModal from '../components/Advert/edit.modal'
+import EditModal from '../components/Advert-page/edit.modal'
 import NewModal from '../components/new.group'
 import Pagination from '../components/pagination'
 import {useMessage} from "../hooks/msg.hook";
 import {useHttp} from "../hooks/http.hook";
 import {preloader, removeModal, setCurrentPage, sortingBy} from "../redux/actions";
 import RemoveModal from '../components/remove'
-import TableList from "../components/Advert/tablelist";
+import TableList from "../components/Advert-page/tablelist";
 
 export const Advertisers = ({preloader, currentPage, setCurrentPage, removeItem, removeModal, currentSort, sortingBy}) => {
     const [modal, dispatch] = useState( false);
@@ -19,7 +19,7 @@ export const Advertisers = ({preloader, currentPage, setCurrentPage, removeItem,
     const message = useMessage();
     const {err, req, clear} = useHttp(preloader);
 
-    const sortThead = [{name:'Name', sort: 'name'},{name:'ID', sort: 'id'},{name:'Balance', sort: 'balance'}]
+    const sortThead = [{name:'Name', sort: 'name'},{name:'ID', sort: 'id'},{name:'Balance', sort: 'balance'}];
 
     const openEdit = function (id, name, balance) {
         dispatch(!modal);
@@ -47,7 +47,7 @@ export const Advertisers = ({preloader, currentPage, setCurrentPage, removeItem,
         const post = await req('/advertisers', 'POST', {opt: {mtd: "POST"}, body: data});
         post.code === 200 ? message('SUCCESS') : message(post.message);
 
-        await paginator();
+        paginator();
         setM(false)
     };
     const closeNew = function () {
@@ -64,15 +64,21 @@ export const Advertisers = ({preloader, currentPage, setCurrentPage, removeItem,
         await paginator();
     }
 
-    const paginator = async (sort = currentSort.name + currentSort.dir) => {
-        const data = await req(`/advertisers`, 'POST', {opt: {mtd: "GET",param: `?page=${currentPage}&pageCount=30&orderBy=${sort}`}, body: null});
+    const paginator = async (sort = currentSort.name + currentSort.dir, page = currentPage) => {
+        const data = await req(`/advertisers`, 'POST', {opt: {mtd: "GET",param: `?page=${page}&pageCount=30&orderBy=${sort}`}, body: null});
+        if (data.code === 500) {
+            message(data.message);
+            return
+        }
+
         setState(data);
     }
 
     useEffect(() => {
         if (state.length === 0) {
+            sortingBy({name:'name', dir: ' asc'});
             setCurrentPage(1);
-            paginator();
+            paginator('name asc');
             message('Для корректной работы используете вкладку в инкогнито !')
         }
         message(err);
@@ -87,7 +93,7 @@ export const Advertisers = ({preloader, currentPage, setCurrentPage, removeItem,
                 <h1>Advertisers</h1>
                 <a onClick={() => setM(true)} className="waves-effect waves-light btn-middle btn lighten-2"><i className="material-icons">add</i> <span>new Advertisers</span></a>
             </div>
-            {/*HEADER OFF*/}
+            {/*HEADER END*/}
 
             {/*TABLE*/}
             <div className={'z-depth-3 table-wrapper'}>
@@ -96,10 +102,10 @@ export const Advertisers = ({preloader, currentPage, setCurrentPage, removeItem,
                     {state.data ? <TableList changeEdit={openEdit} data={state.data} /> : null}
                 </table>
             </div>
-            {/*TABLE OFF*/}
+            {/*TABLE END*/}
 
 
-            {state.totalPages > 1 ? <Pagination paginator={paginator} page={state.totalPages} /> : null}
+            {state.totalPages > 1 ? <Pagination paginator={paginator} page={state.totalPages} sort={currentSort} /> : null}
 
             {/*MODALS*/}
             {modal ? <EditModal changeEdit={changeEdit} submitEdit={submitEdit} editBody={editBody} /> : null}

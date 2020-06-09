@@ -1,6 +1,7 @@
 import React, {useContext, useState} from "react";
 import {AppContext} from "../../context/AppContext";
 import PropTypes from 'prop-types'
+import {useMix} from '../../hooks/mix.hook';
 
 
 const Group = ({closeNew, submit}) => {
@@ -10,36 +11,14 @@ const Group = ({closeNew, submit}) => {
         name: '',
         budget: 0,
         url: '',
-        frequency: '',
         bidprice: 0,
     });
     const [statusTv, setStatusTv] = useState([...typeTv]);
     const [placeTv, setPlaceTv] = useState([...typePlaceTv]);
 
-    const changeInp = (event, name) => {
-        event.persist();
 
-        if (event.target.name === name && event.target.value === '') {
-            setState(
-                prev => ({
-                    ...prev,
-                    ...{
-                        [event.target.name]: 0
-                    }
-                })
-            );
-            return
-        }
+    const {changeInpIntg, changeInp, onlyNumber, sstate} = useMix({...state});
 
-        setState(
-            prev => ({
-                ...prev,
-                ...{
-                    [event.target.name]: event.target.name === name ? parseInt(event.target.value) : event.target.value
-                }
-            })
-        )
-    };
     const handleStatus = (event) => {
         setStatusTv(
             statusTv.map((el, index) => {
@@ -71,7 +50,11 @@ const Group = ({closeNew, submit}) => {
         event.preventDefault();
 
         let data = {
-            ...state,
+            ...sstate,
+            frequencyCap: {
+                cap: sstate.cap,
+                period: sstate.period
+            },
         };
 
         statusTv.map((el, index) => el.val ? data.type = index : '');
@@ -89,7 +72,7 @@ const Group = ({closeNew, submit}) => {
                         <input
                             type="text"
                             name={'name'}
-                            value={state.name}
+                            value={sstate.name}
                             onChange={changeInp}
                             autoComplete={'off'}/>
                     </div>
@@ -99,20 +82,37 @@ const Group = ({closeNew, submit}) => {
                             type="text"
                             pattern="[0-9]*"
                             name={'budget'}
-                            value={state.budget}
-                            onChange={(e) => changeInp(e, 'budget')}
+                            value={sstate.budget}
+                            onKeyPress={onlyNumber}
+                            onChange={changeInpIntg}
                             autoComplete={'off'}/>
                     </div>
                 </div>
                 <div className="modal-content wrapper-fields">
-                    <div className="field-mix">
-                        <p>Frequency cap</p>
-                        <input
-                            type="text"
-                            name={'frequency'}
-                            value={state.frequency}
-                            onChange={changeInp}
-                            autoComplete={'off'}/>
+                    <div className="field-mix field-frequency">
+                        <p>frequency Cap</p>
+                        <div className="field-inner">
+                            <div className="field-item">
+                                <span>Cap</span>
+                                <input
+                                    type="text"
+                                    name={'cap'}
+                                    value={sstate.cap}
+                                    onKeyPress={onlyNumber}
+                                    onChange={changeInpIntg}
+                                    autoComplete={'off'}/>
+                            </div>
+                            <div className="field-item">
+                                <span>Period</span>
+                                <input
+                                    type="text"
+                                    name={'period'}
+                                    value={sstate.period}
+                                    onKeyPress={onlyNumber}
+                                    onChange={changeInpIntg}
+                                    autoComplete={'off'}/>
+                            </div>
+                        </div>
                     </div>
                     <div className="field-mix">
                         <p>bid Price</p>
@@ -120,8 +120,9 @@ const Group = ({closeNew, submit}) => {
                             type="text"
                             pattern="[0-9]*"
                             name={'bidprice'}
-                            value={state.bidprice}
-                            onChange={(e) => changeInp(e, 'bidprice')}
+                            value={sstate.bidprice}
+                            onKeyPress={onlyNumber}
+                            onChange={changeInpIntg}
                             autoComplete={'off'}/>
                     </div>
                     <div className="field-mix">
@@ -129,7 +130,7 @@ const Group = ({closeNew, submit}) => {
                         <input
                             type="text"
                             name={'url'}
-                            value={state.url}
+                            value={sstate.url}
                             onChange={changeInp}
                             autoComplete={'off'}/>
                     </div>
@@ -184,7 +185,7 @@ const Group = ({closeNew, submit}) => {
                 </div>
                 <div className="modal-footer btn-wrapper">
                     <button type={"button"} onClick={() => closeNew(false)} className="waves-effect waves-light red btn-small btn">CANCEL</button>
-                    <button type={"submit"} className="waves-effect waves-light btn-small btn" disabled={!state.name.length || (!statusTv[0].val && !statusTv[1].val)}>Submit</button>
+                    <button type={"submit"} className="waves-effect waves-light btn-small btn" disabled={!sstate.name.length || (!statusTv[0].val && !statusTv[1].val)}>Submit</button>
                 </div>
             </form>
         </div>

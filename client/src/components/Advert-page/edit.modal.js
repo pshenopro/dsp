@@ -1,15 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import PropTypes from 'prop-types';
-import {useMessage} from "../../hooks/msg.hook";
-import {useHttp} from "../../hooks/http.hook";
-
 
 const EditModal = ({changeEdit, editBody, submitEdit}) => {
     const [state, setState] = useState({
         ...editBody
     });
-    const message = useMessage();
-    const {load, err, req, clear} = useHttp();
 
     let changeInp = (event, name) => {
         event.persist();
@@ -25,7 +20,6 @@ const EditModal = ({changeEdit, editBody, submitEdit}) => {
         )
     };
 
-
     const edit = async (event) => {
         event.preventDefault();
 
@@ -40,8 +34,6 @@ const EditModal = ({changeEdit, editBody, submitEdit}) => {
 
         submitEdit(data)
     };
-
-
 
     return (
         <div className={'modal-wrapper'}>
@@ -76,7 +68,7 @@ const EditModal = ({changeEdit, editBody, submitEdit}) => {
             </form>
         </div>
     )
-}
+};
 
 EditModal.propTypes = {
     changeEdit: PropTypes.func,

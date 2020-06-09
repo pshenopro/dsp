@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {connect} from 'react-redux'
 import PropTypes from 'prop-types';
 import {setCurrentPage} from "../redux/actions";
 
-const Pagination = ({page, paginator, currentPage, setCurrentPage}) => {
+const Pagination = ({page, paginator, currentPage, setCurrentPage, sort}) => {
     let numbersPage = page,
         numbersList = [];
     for (let i=0; i < numbersPage; i++) {
@@ -11,30 +11,31 @@ const Pagination = ({page, paginator, currentPage, setCurrentPage}) => {
     }
 
     const checkCur = (val) => {
-        setCurrentPage(currentPage + val)
-    }
+        setCurrentPage(val);
+        paginator(sort.name + sort.dir, val)
+    };
 
 
 
     useEffect(() => {
-        paginator();
-    }, [currentPage]);
+
+    }, []);
 
     return (
         <ul className="pagination">
             <button
                 type={'button'}
-                onClick={() => {checkCur(-1)}}
+                onClick={() => checkCur(currentPage-1)}
                 className={currentPage === 1 ? 'disabled' : 'waves-effect'}
                 disabled={currentPage === 1}>
                 <i className="material-icons">chevron_left</i>
             </button>
 
-            {numbersList.map((el, index) => <li onClick={() => setCurrentPage(el)} className={el === currentPage ? 'active' : 'waves-effect'} key={index}><a>{el}</a></li>)}
+            {numbersList.map((el, index) => <li onClick={() => checkCur(el)} className={el === currentPage ? 'active' : 'waves-effect'} key={index}><a>{el}</a></li>)}
 
             <button
-                type={'button'}
-                onClick={() => {checkCur(+1)}}
+                type={'submit'}
+                onClick={() => checkCur(currentPage + 1)}
                 className={numbersPage === currentPage ? 'disabled' : 'waves-effect'}
                 disabled={numbersPage === currentPage}>
                 <i className="material-icons">chevron_right</i>
@@ -45,7 +46,8 @@ const Pagination = ({page, paginator, currentPage, setCurrentPage}) => {
 
 Pagination.prototype = {
     page: PropTypes.number,
-    paginator: PropTypes.func
+    paginator: PropTypes.func,
+    sort: PropTypes.object,
 };
 
 const mapStateToProps = state => {

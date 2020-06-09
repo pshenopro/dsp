@@ -16,16 +16,15 @@ const Tablelist = ({data, changeEdit, removeModal}) => {
         return date[2] + '.' + date[1] + '.' + date[0]
     };
 
-
     return (
         <tbody>
             {data.length ? data.map((el, index) => <tr key={el.id}>
                 <td><NavLink to={history.location.pathname + '/subgroups/' + el.id} exact>{el.name}</NavLink></td>
                 <td>
                     <div>{type[el.type]}</div>
-                    <div><i>{el.placement ? place[el.placement - 1] : ""}</i></div>
+                    {type[el.type] === 'Video' ? <div><i>{el.placement ? place[el.placement] : ""}</i></div> : ''}
                 </td>
-                <td className={'status ' + status[el.status - 1]}>{status[el.status - 1]}</td>
+                <td className={'status ' + status[el.status]}>{status[el.status]}</td>
                 <td>{el.budget}</td>
                 <td>{el.id}</td>
                 <td>{el.landingUrl.split('//')[1]}</td>

@@ -24,7 +24,7 @@ const TableThead = ({paginator, sortingBy, currentSort, sortThead}) => {
     return (
         <thead>
             <tr>
-                {sortThead.map((el, index) => <th key={index}><SortItem name={el.name} setActive={setA} active={active.name} /></th>)}
+                {sortThead.map((el, index) => <th key={index}><SortItem el={el} setActive={setA} active={active.sort} /></th>)}
                 <th> </th>
             </tr>
         </thead>

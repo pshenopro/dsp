@@ -60,9 +60,10 @@ body {
     table {
         th {
             .sort {
-                display: inline-block;
+                display: flex;
                 cursor: pointer;
                 transition: all .3s;
+
 
                 i {
                     transition: all .3s;
@@ -156,6 +157,87 @@ body {
             padding-right: 8px;
         }
     }
+
+    .tabs {
+        height: auto;
+        padding-top: 50px;
+
+        .control {
+            display: flex;
+        }
+
+        .btn {
+            box-shadow: none;
+            margin-right: 15px;
+            border-radius: 0;
+        }
+        #pos:checked ~ .output .positive-label,
+        #neg:checked ~ .output .negative-label {
+            display: block;
+            z-index: 1;
+        }
+
+        #pos:checked ~ .control label[for=pos],
+        #neg:checked ~ .control label[for=neg] {
+            background-color: #004d40 !important;
+        }
+
+        .output {
+            padding: 30px;
+            width: 100%;
+            height: auto;
+            border: 1px solid #26a69a;
+            overflow: hidden;
+            position: relative;
+
+            .table-wrapper {
+                display: flex;
+                justify-content: space-between;
+
+                .item-inner {
+                    width: 50%;
+                    padding-right: 40px;
+
+                    &:last-child {
+                        padding-left: 40px;
+                        border-left: 2px solid #26a69a;
+                    }
+                }
+
+                .buttons-wrapper {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+                .buttons {
+                    display: flex;
+                }
+
+                h5 {
+                    border-bottom: 2px solid #26a69a;
+                    padding-bottom: 5px;
+                    width: max-content;
+                }
+            }
+
+            .item {
+                height: auto;
+                position: relative;
+                display: none;
+                transition: all .3s;
+                z-index: 0;
+                width: 100%;
+                white-space: normal;
+                h3 {
+                    padding-top: 0;
+                    margin-top: 0;
+                }
+                p {
+                    font-size: 20px;
+                }
+            }
+        }
+    }
 }
 
 .modal-wrapper {
@@ -181,6 +263,10 @@ body {
         overflow: hidden;
     }
 
+    .close {
+        cursor: pointer;
+    }
+
     .wrapper-fields {
         display: flex;
         justify-content: space-between;
@@ -199,6 +285,10 @@ body {
             }
         }
 
+        p {
+            min-height: 55px;
+        }
+
         .field {
             width: 30%;
 
@@ -208,10 +298,6 @@ body {
         }
         .field-number {
             width: 15%;
-
-            p {
-                min-height: 55px;
-            }
         }
         .field-mix {
             width: 30%;
@@ -294,6 +380,10 @@ body {
     .react-date-picker__calendar-button {
         display: none;
     }
+    .react-date-picker__calendar {
+        top: auto !important;
+        bottom: 100% !important;
+    }
 }
 
 .status.Active {
@@ -338,3 +428,4 @@ body {
     align-items: center;
     background: rgba(255, 255, 255, 0.80);
 }
+

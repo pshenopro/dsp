@@ -3,12 +3,12 @@ import {NavLink, useHistory} from "react-router-dom";
 import {connect} from 'react-redux'
 import Newgroup from '../../components/new.group'
 import Pagination from '../../components/pagination'
-import Edit from '../../components/Advent-slug/edit.modal'
+import Edit from '../../components/Advert-id/edit.modal'
 import {useHttp} from "../../hooks/http.hook";
 import {useMessage} from "../../hooks/msg.hook";
 import {preloader, removeModal, setCurrentPage, sortingBy} from "../../redux/actions";
 import RemoveModal from "../../components/remove";
-import TableList from "../../components/Advent-slug/tablelist";
+import TableList from "../../components/Advert-id/tablelist";
 import TableThead from '../../components/table.thead'
 
 const AdvertId = (props) => {
@@ -26,32 +26,27 @@ const AdvertId = (props) => {
         {name:'Group name', sort: 'name'},
         {name:'Status', sort: 'status'},
         {name:'ID', sort: 'id'},
-        {name:'Advertiser ID', sort: 'advertiserId'},
-        {name:'Budget Spent', sort: 'budgetSpent'},
+        // {name:'Advertiser ID', sort: 'advertiserId'},
+        {name: <span>Budget <br/>Spent</span>, sort: 'budgetSpent'},
         {name:'Budget', sort: 'budget'},
-        {name:`frequency Cap`, sort: 'frequencyCap'}
-    ]
+        // {name: <span>frequency <br/>Cap</span>, sort: 'frequencyCap'},
+        {name:'Date', sort: 'startDate'},
+    ];
 
     const pageName = async () => {
-        try {
-            const data = await req(`/advertisers/${props.match.params.id}`, 'POST', {opt:{mtd: "GET"}, body: null});
-            setState(data);
-        } catch (e) {
-            message(e.message)
+        const data = await req(`/advertisers/${props.match.params.id}`, 'POST', {opt:{mtd: "GET"}, body: null});
+        if (data.code === 500) {
+            message(data.message);
+            return
         }
+
+        setState(data);
     };
 
-    const openEdit = function (id, name, budget, status) {
+    const openEdit = function (data) {
         setModal(!modal);
 
-        setEditBody(
-            {
-                id: id,
-                name: name,
-                budget: budget,
-                status: status,
-            }
-        );
+        setEditBody(data);
     };
     const changeEdit = () => {
         setModal(!modal);
@@ -60,7 +55,7 @@ const AdvertId = (props) => {
         const post = await req(history.location.pathname + `/campaigns/${data.id}`, 'POST', {opt: {mtd: "PUT"}, body: data});
         post.code === 200 ? message('SUCCESS') : message(post.message);
 
-        paginator(props.currentPage);
+        paginator();
         setModal(!modal);
     }
 
@@ -85,13 +80,14 @@ const AdvertId = (props) => {
         await paginator();
     }
 
-    const paginator = async (sort = props.currentSort.name + props.currentSort.dir) => {
-        try {
-            const data = await req(`/advertisers/${props.match.params.id}/campaigns`, 'POST', {opt: {mtd: "GET", param: `?page=${props.currentPage}&pageCount=30&orderBy=${sort}`}, body: null});
-            setlist(data)
-        } catch (e) {
-            message(e.message)
+    const paginator = async (sort = props.currentSort.name + props.currentSort.dir, page = props.currentPage) => {
+        const data = await req(`/advertisers/${props.match.params.id}/campaigns`, 'POST', {opt: {mtd: "GET", param: `?page=${page}&pageCount=30&orderBy=${sort}`}, body: null});
+        if (data.code === 500) {
+            message(data.message);
+            return
         }
+
+        setlist(data)
     }
 
     useEffect(() => {
@@ -100,8 +96,9 @@ const AdvertId = (props) => {
         }
 
         if (list.length === 0) {
+            sortingBy({name:'name', dir: ' asc'});
             props.setCurrentPage(1);
-            paginator();
+            paginator('name asc');
         }
         message(err);
         clear()
@@ -109,6 +106,7 @@ const AdvertId = (props) => {
 
     return (
         <div className={'page advertisers-page'}>
+            {/*HEADER*/}
             <ul className={'sub-nav'}>
                 <li><NavLink to='/advertisers'>Advertisers</NavLink></li>
                 <i className="material-icons small">keyboard_arrow_right</i>
@@ -119,24 +117,23 @@ const AdvertId = (props) => {
 
                 <a onClick={() => setnewGroup(true)} className="waves-effect waves-light btn-middle btn lighten-2">
                     <i className="material-icons">add</i>
-                    <span>new group</span>
+                    <span>new campaigns</span>
                 </a>
             </div>
+            {/*HEADER END*/}
 
+            {/*TABLE*/}
             <div className={'z-depth-3 table-wrapper'}>
                 <table className={'highlight table-group'}>
                     {list.data ? <TableThead sortingBy={props.sortingBy} paginator={paginator} currentSort={props.currentSort} sortThead={sortThead}/> : null}
                     {list.data ? <TableList changeEdit={openEdit} data={list.data}/> : null}
                 </table>
             </div>
+            {/*TABLE END*/}
 
+            {list.totalPages > 1 ? <Pagination paginator={paginator} page={list.totalPages} sort={props.currentSort} /> : null}
 
-
-            {/*{typeof list.data === 'object' ? <Table state={list.data} changeEdit={openEdit}/> : null}*/}
-
-
-            {list.totalPages > 1 ? <Pagination paginator={paginator} page={list.totalPages} /> : null}
-
+            {/*MODALS*/}
             {modal ? <Edit changeEdit={changeEdit} submitEdit={submitEdit} editBody={editBody}/> : null}
             {newGroup ? <Newgroup closeNew={closeGroup} submit={newSubmit} cost={'budget'}/> : null}
             {props.removeItem.bool ? <RemoveModal removeEl={removeEl} name={props.removeItem.name} /> : ""}

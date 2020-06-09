@@ -3,10 +3,13 @@ import PropTypes from 'prop-types';
 import {AppContext} from "../../context/AppContext";
 import {useMix} from '../../hooks/mix.hook';
 import DatePicker from 'react-date-picker';
+import {useMessage} from "../../../src/hooks/msg.hook";
+
 
 
 const EditModal = ({changeEdit, editBody, submitEdit}) => {
     const {status, typeTv, typePlaceTv} = useContext(AppContext);
+    let counter = 1;
 
     const [sts, setStatus] = useState([...status]);
     const [statusTv, setStatusTv] = useState([...typeTv]);
@@ -14,10 +17,9 @@ const EditModal = ({changeEdit, editBody, submitEdit}) => {
     const [startD, setStartD] = useState(new Date(editBody.startDate));
     const [endD, setEndD] = useState(new Date(editBody.endDate));
 
-
+    const message = useMessage();
     const {changeInpIntg, changeInp, onlyNumber, sstate} = useMix({...editBody, ...editBody.frequencyCap});
 
-    let counter = 1;
 
     const handleStatus = (event) => {
         setStatusTv(
@@ -61,11 +63,20 @@ const EditModal = ({changeEdit, editBody, submitEdit}) => {
     };
 
     const dateConvert = (val) => {
-        return val.getFullYear() + "-" + (`${(val.getMonth() + 1)}`.length > 1 ? (val.getMonth() + 1) : ('0' + (val.getMonth() + 1))) + "-" + (`${(val.getDate() + 1)}`.length > 1 ? (val.getDate() + 1) : ('0' + (val.getDate())))
+        return val.getFullYear() + "-" + (`${(val.getMonth() + 1)}`.length > 1
+            ? (val.getMonth() + 1)
+            : ('0' + (val.getMonth() + 1))) + "-" + (`${(val.getDate() + 1)}`.length > 1
+            ? val.getDate()
+            : ('0' + (val.getDate())))
     }
 
     const submit = async (event) => {
         event.preventDefault();
+
+        if (startD.getFullYear() < 2000 || endD.getFullYear() < 2000) {
+            message('Поле DATE не валидно');
+            return
+        }
 
         let data = {
             ...sstate,
@@ -84,7 +95,7 @@ const EditModal = ({changeEdit, editBody, submitEdit}) => {
         if (counter === 1) {
             setStatus(
                 sts.map((el, index) => {
-                    if ((index + 1) === editBody.status) {
+                    if ((index) === editBody.status) {
                         el.val = true;
                         return el;
                     }
@@ -106,7 +117,7 @@ const EditModal = ({changeEdit, editBody, submitEdit}) => {
 
             setPlaceTv(
                 placeTv.map((el, index) => {
-                    if ((index + 1) === editBody.placement) {
+                    if ((index) === editBody.placement) {
                         el.val = true;
                         return el;
                     }
@@ -121,7 +132,7 @@ const EditModal = ({changeEdit, editBody, submitEdit}) => {
 
     return (
         <div className={'modal-wrapper'}>
-            <form id="modal1" onSubmit={submit} className="modal open">
+            <form id="modal1" onSubmit={submit} className="modal open" noValidate>
                 <div className="modal-content wrapper-fields">
                     <div className="field">
                         <p>name*</p>
@@ -218,6 +229,8 @@ const EditModal = ({changeEdit, editBody, submitEdit}) => {
                             <div className="field-item">
                                 <span>Start</span>
                                 <DatePicker
+                                    name={'myDate'}
+                                    format={'dd-MM-y'}
                                     className="datePicker"
                                     onChange={setStartD}
                                     value={startD}
@@ -226,6 +239,8 @@ const EditModal = ({changeEdit, editBody, submitEdit}) => {
                             <div className="field-item">
                                 <span>End</span>
                                 <DatePicker
+                                    name={'myDate'}
+                                    format={'dd-MM-y'}
                                     className="datePicker"
                                     onChange={setEndD}
                                     value={endD}
@@ -247,7 +262,7 @@ const EditModal = ({changeEdit, editBody, submitEdit}) => {
                                             name="group"
                                             type="radio"
                                             onChange={handleChange}
-                                            onClick={() => sstate.status = index + 1}
+                                            onClick={() => sstate.status = index}
                                             value={index}
                                             checked={el.val}/>
                                         <span>{el.name}</span>

@@ -12,6 +12,10 @@ export const useMix = (data) => {
         }
     }
 
+    function MyHtml(html) {
+        return {__html: html};
+    }
+
     const changeInpIntg = (event) => {
         event.persist();
 
@@ -43,6 +47,6 @@ export const useMix = (data) => {
         )
     };
 
-    return {changeInpIntg, changeInp, onlyNumber, sstate}
+    return {changeInpIntg, changeInp, onlyNumber, MyHtml, sstate}
 }
 

@@ -2,18 +2,19 @@ import React from "react";
 import PropTypes from 'prop-types';
 
 
-const Sort = ({name, setActive, active}) => {
+const Sort = ({el, setActive, active}) => {
     const submit = () => {
-        setActive(name);
+        setActive(el.name);
     };
 
     return (
-        <span onClick={submit} className={`sort ${active === name ? 'active' : ''}`}>{name} <i className="material-icons Small">import_export</i></span>
+        <span onClick={submit} className={`sort ${active === el.sort ? 'active' : ''}`}>{el.name} <i className="material-icons Small">import_export</i></span>
     )
 };
 
 Sort.propTypes = {
-    name: PropTypes.string,
+    setActive: PropTypes.func,
+    el: PropTypes.object,
     active: PropTypes.string,
 };
 
