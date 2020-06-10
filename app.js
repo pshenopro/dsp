@@ -58,8 +58,8 @@ app.use(pathHttp, (req, res, next) => {
             const file = response.headers['content-disposition'].split('filename=')[1].split(';')[0];
             const fp = path.join(__dirname, 'client', 'public', file);
 
-            fs.readFile(fp, "utf8", function(error,data){ });
-            fs.writeFileSync(fp, response.body);
+            fs.readFile(fp, "utf8", function(error,data){});
+            fs.writeFile(fp, response.body);
 
             console.log(response.body);
 
