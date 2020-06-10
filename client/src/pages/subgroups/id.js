@@ -13,6 +13,7 @@ const SubId = props => {
         nameSub: ''
     });
     const [state, setstate] = useState(null);
+    const [txt, setTxt] = useState('/');
     const [file, setFile] = useState({
         pDomain: {},
         PApps: {},
@@ -65,14 +66,6 @@ const SubId = props => {
     };
 
     const setPOST = async (name, http) => {
-        // const positiveapps = await req(history.location.pathname + '/positiveapps', 'POST', {
-        //     opt:{
-        //         mtd: "GET",
-        //         set: 'file'
-        //     },
-        //     body: null
-        // });
-
         const post = await req(history.location.pathname + http, 'POST', {
             opt:{
                 mtd: "GET",
@@ -91,7 +84,7 @@ const SubId = props => {
                 }
             })
         );
-        console.log(file)
+        setTxt(post.file)
     }
 
 
@@ -138,7 +131,7 @@ const SubId = props => {
                     </tbody>
                 </table>
 
-                <Tabs path={history.location.pathname} post={setPOST} file={file}/>
+                <Tabs path={history.location.pathname} post={setPOST} file={file} txt={txt}/>
 
             </div>
             {/*CONTENT END*/}

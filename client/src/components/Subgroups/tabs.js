@@ -3,7 +3,7 @@ import Modal from './modal';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 
-const Tabs = ({path, file, post}) => {
+const Tabs = ({path, file, post, txt}) => {
     const [modal, setModal] = useState(false);
     const [pos, setPos] = useState(
         {
@@ -11,7 +11,6 @@ const Tabs = ({path, file, post}) => {
             app: {name: 'name_txt.txt', ref: useRef()}
         }
     );
-    const [txt, setTxt] = useState('/')
     const handelrModal = () => {
         setModal(!modal)
     }
@@ -174,6 +173,7 @@ Tabs.propsType = {
     path: PropTypes.string,
     file: PropTypes.Object,
     post: PropTypes.func,
+    txt: PropTypes.string,
 };
 
 export default Tabs;
