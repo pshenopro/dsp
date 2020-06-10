@@ -55,14 +55,16 @@ app.use(pathHttp, (req, res, next) => {
         }
 
         if (opt.set === 'file') {
-            const file = response.headers['content-disposition'].split('filename=')[1].split(';')[0];
-            const fp = path.join(__dirname, 'client', 'public', file);
+            const preName = pathHttp.split('/').reverse()[0][0],
+                  file = preName + '_' + response.headers['content-disposition'].split('filename=')[1].split(';')[0],
+                  fp = path.join(__dirname, 'client', 'public', file);
 
             fs.readFile(fp, "utf8", function(error,data){});
             fs.writeFile(fp, response.body, function(error){
                 if(error) throw error;
             });
 
+            console.log(preName);
             console.log(response.body);
 
             res.json({file: file, test:fp});
