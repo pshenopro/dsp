@@ -59,7 +59,9 @@ app.use(pathHttp, (req, res, next) => {
             const fp = path.join(__dirname, 'client', 'public', file);
 
             fs.readFile(fp, "utf8", function(error,data){});
-            fs.writeFile(fp, response.body);
+            fs.writeFile(fp, response.body, function(error){
+                if(error) throw error;
+            });
 
             console.log(response.body);
 
