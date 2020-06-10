@@ -18,7 +18,7 @@ export const useRoutes = () => {
                 <Route exact path="/advertisers/:id/campaigns/:id" component={CampaignsId} />
                 <Route exact path="/advertisers/:id/campaigns/:id/subgroups/:id" component={SubId} />
 
-                {/*<Redirect to={'/advertisers'} />*/}
+                <Redirect to={'/advertisers'} />
             </Switch>
         )
     }

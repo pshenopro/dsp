@@ -63,7 +63,7 @@ app.use(pathHttp, (req, res, next) => {
 
             console.log(response.body);
 
-            res.json({file: file, test:response.body});
+            res.json({file: file, test:fp});
             res.status(200);
             res.end();
             return
