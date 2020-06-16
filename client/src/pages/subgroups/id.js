@@ -4,7 +4,8 @@ import {connect} from 'react-redux'
 import {useHttp} from "../../hooks/http.hook";
 import {useMessage} from "../../hooks/msg.hook";
 import {preloader} from "../../redux/actions";
-import Tabs from '../../components/Subgroups/tabs'
+import Tabs from '../../components/Subgroups/tabs';
+import HeadLine from "../../components/Campaigns/head";
 
 const SubId = props => {
     const [names, setNames] = useState({
@@ -13,46 +14,24 @@ const SubId = props => {
         nameSub: ''
     });
     const [state, setstate] = useState(null);
-    const [txt, setTxt] = useState('/');
-    const [file, setFile] = useState({
-        pDomain: {},
-        PApps: {},
-        nDomain: {},
-        nApps: {},
-    })
-
     const history = useHistory();
     const message = useMessage();
     const {err, req, clear} = useHttp(props.preloader);
 
     let sub = history.location.pathname,
         camp = sub.split('/subgroups/')[0],
-        advert = camp.split('/campaigns/')[0],
-        thead = [
-            {name:'Name', sort: 'name'},
-            {name:'Type', sort: 'type'},
-            {name:'Status', sort: 'status'},
-            {name:'Budget', sort: 'budget'},
-            {name:'ID', sort: 'id'},
-            {name: <span>Landing <br/>Url</span>, sort: 'landingUrl'},
-            {name:'Bid Price', sort: 'bidPrice'},
-            {name: <span>frequency <br/>Cap</span>, sort: 'frequencyCap'},
-            {name:<span>Budget <br/>Spent</span>, sort: 'budgetSpent'},
-            {name: <span>Start <br/>Position</span> , sort: 'startPosition'},
-        ];
+        advert = camp.split('/campaigns/')[0];
 
     const pageName = async () => {
         try {
-            const data = await req(history.location.pathname, 'POST', {opt:{mtd: "GET"}, body: null});
-            if (data.code === 500) {
-                message(data.message);
-                history.push('/advertisers')
-                return
-            }
-            setstate(data);
+            const data = await req('http://92.42.15.118:80/api' + history.location.pathname, 'GET');
 
-            const prev = await req(camp, 'POST', {opt:{mtd: "GET"}, body: null});
-            const prevPre = await req(advert, 'POST', {opt:{mtd: "GET"}, body: null});
+            if (data) {
+                setstate(data);
+            }
+
+            const prev = await req('http://92.42.15.118:80/api' + camp, 'GET');
+            const prevPre = await req('http://92.42.15.118:80/api' + advert, 'GET');
 
             setNames({
                 nameAdv: prevPre.name,
@@ -65,36 +44,25 @@ const SubId = props => {
         }
     };
 
-    const setPOST = async (name, http) => {
-        const post = await req(history.location.pathname + http, 'POST', {
-            opt:{
-                mtd: "GET",
-                set: 'file'
-            },
-            body: null
-        });
+    const submitSave = async (data) => {
+        try {
+            const post = await req('http://92.42.15.118:80/api' + history.location.pathname, 'PUT', data);
+            message('Success')
+        } catch (e) {
+            message('Server error');
+        }
 
-        setFile(
-            prev => ({
-                ...prev,
-                ...{
-                    [name]: {
-                        file: post.file
-                    }
-                }
-            })
-        );
-        setTxt(post.file)
     }
 
 
     useEffect(() => {
         if (!state) {
-            pageName()
+            pageName();
         }
         message(err);
-        clear()
+        clear();
     }, [err, message, clear]);
+
 
     return (
         <div className={'page advertisers-page'}>
@@ -114,25 +82,12 @@ const SubId = props => {
             {/*HEADER END*/}
 
             {/*CONTENT*/}
-            <div className={'z-depth-3 table-wrapper sub-group_wrapper'}>
+            <div className={'z-depth-3 table-wrapper'}>
+                <div className="sub-group_wrapper">
+                    {state ? <HeadLine state={state} submit={submitSave} /> : <span>Загрузка....</span>}
+                </div>
 
-                <table className={'highlight sub-group'}>
-                    <thead>
-                        <tr>
-                            {state ? thead.map((el, index) => <th key={index}> {el.name}</th>) : <th>Пусто</th>}
-                            <th> </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            {state ? thead.map((el, index) => <td key={index}> {state.frequencyCap === state[el.sort] && state.frequencyCap ? <div><div>cap: {state[el.sort].cap}</div><div>period: {state[el.sort].period}</div></div> : state[el.sort]}</td>) : <td>Пусто</td>}
-                            <td> </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <Tabs path={history.location.pathname} post={setPOST} file={file} txt={txt}/>
-
+                {state ? <Tabs path={history.location.pathname} file={state} /> : 'Загрузка' }
             </div>
             {/*CONTENT END*/}
 

@@ -36,16 +36,24 @@ export const Advertisers = ({preloader, currentPage, setCurrentPage, removeItem,
         dispatch(!modal);
     };
     const submitEdit = async (data) => {
-        const post = await req(`/advertisers/${data.id}`, 'POST', {opt: {mtd: "PUT"}, body: data});
-        post.code === 200 ? message('SUCCESS') : message(post.message);
+        try {
+            const post = await req('http://92.42.15.118:80/api/advertisers/' + data.id, 'PUT', data);
+            message('Success')
+        } catch (e) {
+            message('Error')
+        }
 
         dispatch(!modal);
         paginator();
     }
 
     const newSubmit = async (data) => {
-        const post = await req('/advertisers', 'POST', {opt: {mtd: "POST"}, body: data});
-        post.code === 200 ? message('SUCCESS') : message(post.message);
+        try {
+            const post = await req('http://92.42.15.118:80/api/advertisers/', 'POST', data);
+            message('Success')
+        } catch (e) {
+            message('Error')
+        }
 
         paginator();
         setM(false)
@@ -56,8 +64,12 @@ export const Advertisers = ({preloader, currentPage, setCurrentPage, removeItem,
 
     const removeEl = async (chose) => {
       if (chose) {
-          const post = await req('/advertisers/' + removeItem.id, 'POST', {opt: {mtd: "DELETE"}, body: false});
-          post.code === 204 ? message('Deleted') : message(post.message);
+          try {
+              const post = await req('http://92.42.15.118:80/api/advertisers/' + removeItem.id, 'DELETE', );
+              message('Deleted')
+          } catch (e) {
+              message('Server error');
+          }
       }
 
         removeModal('', '', false);
@@ -65,8 +77,8 @@ export const Advertisers = ({preloader, currentPage, setCurrentPage, removeItem,
     }
 
     const paginator = async (sort = currentSort.name + currentSort.dir, page = currentPage) => {
-        const data = await req(`/advertisers`, 'POST', {opt: {mtd: "GET",param: `?page=${page}&pageCount=30&orderBy=${sort}`}, body: null});
-        if (data.code === 500) {
+        const data = await req(`http://92.42.15.118:80/api/advertisers?page=${page}&pageCount=30&orderBy=${sort}`, 'GET');
+        if (data.status === 500) {
             message(data.message);
             return
         }

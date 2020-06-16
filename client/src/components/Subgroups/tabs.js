@@ -3,177 +3,149 @@ import Modal from './modal';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 
-const Tabs = ({path, file, post, txt}) => {
+const Tabs = ({path, file}) => {
     const [modal, setModal] = useState(false);
-    const [pos, setPos] = useState(
-        {
-            dom: {name: '', ref: useRef()},
-            app: {name: 'name_txt.txt', ref: useRef()}
-        }
-    );
-    const handelrModal = () => {
+    const [target, setTarget] = useState([
+        {name:'positive', ...file.positiveTargeting},
+        {name:"negative", ...file.negativeTargeting},
+    ]);
+    const [txt, setTxt] = useState([]);
+    const [src, setSrc] = useState('')
+
+    const handelrModal = async (val) => {
+        setTxt([]);
+        const post = await fetch('http://92.42.15.118:80/api' + path + '/' + val, {
+            method: 'GET',
+            body: null,
+            headers: {
+                'content-type': 'text/plain; charset=utf-8',
+            }
+        }).then(function (res) {
+            return res.text().then(function (text) {
+                return text.split(/\n/ig)
+            })
+        })
+        setSrc('http://92.42.15.118:80/api' + path + '/' + val);
+        setTxt(post);
         setModal(!modal)
     }
 
-    const changePos = (event, ref) => {
-        event.persist();
-        console.log(ref);
-        setPos(
-            prev => ({
-                ...prev,
-                ...{
-                    [event.target.name]: {
-                        name: ref.current.files[0].name,
-                        ref: ref,
-                    }
-                }
-            })
-        )
+    const close = () => {
+        setModal(!modal)
     }
 
-
-    const submit = async (event) => {
-        event.preventDefault();
+    const changePos = (event, http, flag) => {
+        event.persist();
+        console.log(event.target.files[0]);
 
         const _formdata = new FormData();
-        _formdata.append('positiveDomains', pos.dom.ref.current.files[0]);
+        _formdata.append(http, event.target.files[0]);
 
-        axios.post( path + '/positivedomains', _formdata, {
+        axios.post( 'http://92.42.15.118:80/api' + path + '/' + http.toLowerCase() + '?' + flag, _formdata, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
         })
-    };
+    }
 
-    return (
-        <div className="tabs">
-            <input id={'pos'} type="radio" name={'tab'} hidden readOnly/>
-            <input id={'neg'} type="radio" name={'tab'} hidden readOnly/>
 
-            <div className="control">
-                <label htmlFor="pos" className='btn waves-effect waves-light btn-middle btn teal lighten-1'>Positive targetings</label>
-                <label htmlFor="neg" className='btn waves-effect waves-light btn-middle btn teal lighten-1'>Negative targetings</label>
+    if (file.positiveTargeting || file.negativeTargeting) {
+        return (
+            <div className="tabs">
+                <input id={'pos'} type="radio" name={'tab'} hidden readOnly/>
+                <input id={'neg'} type="radio" name={'tab'} hidden readOnly/>
+
+                <div className="control">
+                    {file.positiveTargeting ? <label htmlFor="pos" className='btn waves-effect waves-light btn-middle btn teal lighten-1'>Positive targetings</label> : null}
+                    {file.negativeTargeting ? <label htmlFor="neg" className='btn waves-effect waves-light btn-middle btn teal lighten-1'>Negative targetings</label> : null}
+                </div>
+
+                <form className={'output'}>
+                    {target.map((el, index, arr) =>
+                        Object.keys(el).length > 1 ? <div className={`item ${el.name}-label`} key={index}>
+                            <div className="item-inner">
+                                <div className="line">
+                                    <h6>apps:</h6>
+                                    <span>{el.apps.length} приложений</span>
+                                    <label
+                                        htmlFor={el.name + 'new'}
+                                        className={'waves-effect waves-light btn-small'}>
+                                        <input id={el.name + 'new'}
+                                               type="file"
+                                               onChange={(event) => changePos(event, el.name + `Apps`, '')}
+                                               hidden />
+                                        добавить
+                                    </label>
+                                    <label
+                                        htmlFor={el.name + 'add'}
+                                        className={'waves-effect waves-light btn-small'}>
+                                        <input id={el.name + 'add'}
+                                               type="file"
+                                               onChange={(event) => changePos(event, el.name + `Apps`, true)}
+                                               hidden />
+                                        Перезаписать
+                                    </label>
+                                    <a className={'waves-effect waves-light btn-small'}
+                                        onClick={() => handelrModal(el.name + `apps`)}>
+                                        просмотр
+                                    </a>
+                                </div>
+                                <div className="line">
+                                    <h6>domains:</h6>
+                                    <span>{el.domains.length} доменов</span>
+                                    <label
+                                        htmlFor={el.name + 'newD'}
+                                        className={'waves-effect waves-light btn-small'}>
+                                        <input
+                                            id={el.name + 'newD'}
+                                            type="file"
+                                            onChange={(event) => changePos(event, el.name + `Domains`, '')}
+                                            hidden />
+                                        добавить
+                                    </label>
+                                    <label
+                                        htmlFor={el.name + 'addD'}
+                                        className={'waves-effect waves-light btn-small'}>
+                                        <input id={el.name + 'addD'}
+                                               type="file"
+                                               onChange={(event) => changePos(event, el.name + `Domains`, true)}
+                                               hidden />
+                                        Перезаписать
+                                    </label>
+                                    <a className={'waves-effect waves-light btn-small'}
+                                        onClick={() => handelrModal(el.name + `domains`)}>
+                                        просмотр
+                                    </a>
+                                </div>
+                                <div className="line">
+                                    <div className="geo">
+                                        <h6>geo:</h6>
+                                        <div className={'geo-inner'}>{JSON.stringify(el.geo)}</div>
+                                    </div>
+                                    <div className="os-type">
+                                        <h6>os:</h6>
+                                        <ul>
+                                            {el.os ? el.os.map((elem, index) => <li key={index}>{elem}</li>) : <li>Пусто</li>}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> : null
+                    )}
+                </form>
+
+                {modal ? <Modal src={src} txt={txt} close={close}/> : null}
             </div>
+        )
+    }
 
-            <form className={'output'}>
-                <div className='item positive-label'>
-                    <h4>Positive</h4>
-                    <div className={'table-wrapper'}>
-                        <div className="item-inner">
-                            <h5>Domain</h5>
-                            <div className='buttons-wrapper'>
-                                <span>{file.pDomain.file ? <span onClick={() => handelrModal()}>{file.pDomain.file}</span> : 'Пусто'}</span>
-                                <div className="buttons">
-                                    {/*<input*/}
-                                    {/*    id="file-1"*/}
-                                    {/*    type="file"*/}
-                                    {/*    ref={pos.dom.ref}*/}
-                                    {/*    accept=".txt"*/}
-                                    {/*    name="dom"*/}
-                                    {/*    onChange={(event) => changePos(event, pos.dom.ref)}*/}
-                                    {/*    hidden/>*/}
-                                    {/*<label htmlFor="file-1" className='btn waves-effect waves-light btn-small btn teal lighten-1'>add</label>*/}
-                                    {/*<button type="submit" className='btn waves-effect waves-light btn-small btn teal lighten-1'>upload</button>*/}
-                                    {file.pDomain.file ? <a
-                                        href={'/' + file.pDomain.file}
-                                        className='btn waves-effect waves-light btn-small btn teal lighten-1'
-                                        download >download</a> : <button onClick={() => post('pDomain', '/positivedomains')} type={'button'} className={'btn waves-effect waves-light btn-small btn teal lighten-1'}>
-                                        <i className="material-icons small">vertical_align_bottom</i>
-                                    </button>}
-                                </div>
-                            </div>
-                        </div>
-                        <div className="item-inner">
-                            <h5>Apps</h5>
-                            <div className='buttons-wrapper'>
-                                <span>{file.PApps.file ? <span onClick={() => handelrModal()}>{file.PApps.file}</span> : 'Пусто'}</span>
-                                <div className="buttons">
-                                    {/*<input*/}
-                                    {/*    id="file-1"*/}
-                                    {/*    type="file"*/}
-                                    {/*    ref={pos.dom.ref}*/}
-                                    {/*    accept=".txt"*/}
-                                    {/*    name="dom"*/}
-                                    {/*    onChange={(event) => changePos(event, pos.dom.ref)}*/}
-                                    {/*    hidden/>*/}
-                                    {/*<label htmlFor="file-1" className='btn waves-effect waves-light btn-small btn teal lighten-1'>add</label>*/}
-                                    {/*<button type="submit" className='btn waves-effect waves-light btn-small btn teal lighten-1'>upload</button>*/}
-                                    {file.PApps.file ? <a
-                                        href={'/' + file.PApps.file}
-                                        className='btn waves-effect waves-light btn-small btn teal lighten-1'
-                                        download >download</a> : <button onClick={() => post('PApps', '/positiveapps')} type={'button'} className={'btn waves-effect waves-light btn-small btn teal lighten-1'}>
-                                        <i className="material-icons small">vertical_align_bottom</i>
-                                    </button>}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className='item negative-label'>
-                    <h4>Negative</h4>
-                    <div className={'table-wrapper'}>
-                        <div className="item-inner">
-                            <h5>Domain</h5>
-                            <div className='buttons-wrapper'>
-                                <span>{file.nDomain.file ? <span onClick={() => handelrModal()}>{file.nDomain.file}</span> : 'Пусто'}</span>
-                                <div className="buttons">
-                                    {/*<input*/}
-                                    {/*    id="file-1"*/}
-                                    {/*    type="file"*/}
-                                    {/*    ref={pos.dom.ref}*/}
-                                    {/*    accept=".txt"*/}
-                                    {/*    name="dom"*/}
-                                    {/*    onChange={(event) => changePos(event, pos.dom.ref)}*/}
-                                    {/*    hidden/>*/}
-                                    {/*<label htmlFor="file-1" className='btn waves-effect waves-light btn-small btn teal lighten-1'>add</label>*/}
-                                    {/*<button type="submit" className='btn waves-effect waves-light btn-small btn teal lighten-1'>upload</button>*/}
-                                    {file.nDomain.file ? <a
-                                        href={'/' + file.nDomain.file}
-                                        className='btn waves-effect waves-light btn-small btn teal lighten-1'
-                                        download >download</a> : <button onClick={() => post('nDomain', '/negativedomains')} type={'button'} className={'btn waves-effect waves-light btn-small btn teal lighten-1'}>
-                                        <i className="material-icons small">vertical_align_bottom</i>
-                                    </button>}
-                                </div>
-                            </div>
-                        </div>
-                        <div className="item-inner">
-                            <h5>Apps</h5>
-                            <div className='buttons-wrapper'>
-                                <span>{file.nApps.file ? <span onClick={() => handelrModal()}>{file.nApps.file}</span> : 'Пусто'}</span>
-                                <div className="buttons">
-                                    {/*<input*/}
-                                    {/*    id="file-1"*/}
-                                    {/*    type="file"*/}
-                                    {/*    ref={pos.dom.ref}*/}
-                                    {/*    accept=".txt"*/}
-                                    {/*    name="dom"*/}
-                                    {/*    onChange={(event) => changePos(event, pos.dom.ref)}*/}
-                                    {/*    hidden/>*/}
-                                    {/*<label htmlFor="file-1" className='btn waves-effect waves-light btn-small btn teal lighten-1'>add</label>*/}
-                                    {/*<button type="submit" className='btn waves-effect waves-light btn-small btn teal lighten-1'>upload</button>*/}
-                                    {file.nApps.file ? <a
-                                        href={'/' + file.nApps.file}
-                                        className='btn waves-effect waves-light btn-small btn teal lighten-1'
-                                        download >download</a> : <button onClick={() => post('nApps', '/negativeapps')} type={'button'} className={'btn waves-effect waves-light btn-small btn teal lighten-1'}>
-                                        <i className="material-icons small">vertical_align_bottom</i>
-                                    </button>}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-
-            {modal ? <Modal src={'/' + txt} close={handelrModal} /> : null}
-        </div>
-    )
+    return <div></div>
 };
 
 Tabs.propsType = {
     path: PropTypes.string,
     file: PropTypes.Object,
     post: PropTypes.func,
-    txt: PropTypes.string,
 };
 
 export default Tabs;

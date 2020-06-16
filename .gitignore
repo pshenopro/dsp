@@ -8,6 +8,7 @@
 # dependencies
 /node_modules
 /client/node_modules
+/client/public/*.txt
 
 # IDEs and editors
 /.idea/workspace.xml
