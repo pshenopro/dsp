@@ -22,7 +22,7 @@
     "redux-thunk": "^2.3.0"
   },
   "scripts": {
-    "wp":  "webpack-dev-server --mode development --open --hot",
+    "wp":  "webpack-dev-server --mode development --hot",
     "wp-start": "webpack --mode development --watch",
     "wp-build": "webpack --mode production",
     "start": "cross-env NODE_ENV=prod node server.js",
