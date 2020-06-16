@@ -65,7 +65,7 @@ export const Advertisers = ({preloader, currentPage, setCurrentPage, removeItem,
     const removeEl = async (chose) => {
       if (chose) {
           try {
-              const post = await req('http://92.42.15.118:80/api/advertisers/' + removeItem.id, 'DELETE', );
+              const post = await fetch('http://92.42.15.118:80/api/advertisers/' + removeItem.id, {method: 'DELETE'} );
               message('Deleted')
           } catch (e) {
               message('Server error');

@@ -98,7 +98,7 @@ const CampaignsId =  (props) => {
     const removeEl = async (chose) => {
         try {
             if (chose) {
-                const post = await req('http://92.42.15.118:80/api' + history.location.pathname + `/subgroups/${props.removeItem.id}`, 'DELETE');
+                const post = await fetch('http://92.42.15.118:80/api' + history.location.pathname + `/subgroups/${props.removeItem.id}`, {method: 'DELETE'});
             }
             message('Success')
         } catch (e) {
