@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
 body {
     padding: 0;
     margin: 0;
@@ -160,7 +162,6 @@ body {
 
     .tabs {
         height: auto;
-        padding-top: 50px;
 
         .control {
             display: flex;
@@ -183,42 +184,12 @@ body {
         }
 
         .output {
-            padding: 30px;
+            padding: 20px 30px;
             width: 100%;
             height: auto;
             border: 1px solid #26a69a;
             overflow: hidden;
             position: relative;
-
-            .table-wrapper {
-                display: flex;
-                justify-content: space-between;
-
-                .item-inner {
-                    width: 50%;
-                    padding-right: 40px;
-
-                    &:last-child {
-                        padding-left: 40px;
-                        border-left: 2px solid #26a69a;
-                    }
-                }
-
-                .buttons-wrapper {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                }
-                .buttons {
-                    display: flex;
-                }
-
-                h5 {
-                    border-bottom: 2px solid #26a69a;
-                    padding-bottom: 5px;
-                    width: max-content;
-                }
-            }
 
             .item {
                 height: auto;
@@ -236,6 +207,197 @@ body {
                     font-size: 20px;
                 }
             }
+
+            .item-inner {
+                .line {
+                    display: flex;
+                    align-items: center;
+                    width: 100%;
+                    padding: 10px 0px;
+
+                    .btn-small {
+                        margin-left: 15px;
+                    }
+
+                    span {
+                        margin: 0;
+                        padding: 0;
+                        line-height: 1;
+                    }
+
+                    h6 {
+                        margin: 0;
+                        padding: 0;
+                        line-height: 1;
+                        text-transform: uppercase;
+                        margin-right: 20px;
+                        font-size: 22px;
+                    }
+                }
+
+                .geo,
+                .os-type {
+                    width: 50%;
+                    min-height: 150px;
+                }
+
+                .os-type {
+                    ul {
+                        padding-left: 40px;
+                    }
+                }
+
+                .geo {
+                    display: flex;
+
+                    .geo-inner {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        min-height: 150px;
+                        width: 100%;
+                        border: 1px solid #58a39c;
+                        padding: 20px;
+                        margin-right: 50px;
+                        border-radius: 15px;
+                    }
+                }
+            }
+        }
+
+        .wrapper-fields {
+            padding: 0;
+            height: 500px;
+            overflow-y: scroll;
+        }
+
+        .modal {
+            a {
+                width: max-content;
+                margin: 0 auto;
+                display: block;
+            }
+        }
+    }
+}
+
+.sub-group_wrapper {
+    .head {
+        padding-top: 20px;
+        align-items: stretch;
+        flex-wrap: wrap;
+
+        .info {
+            width: 50%;
+            display: flex;
+            flex-wrap: wrap;
+
+            .field {
+                width: 50%;
+                padding-right: 20px;
+                padding-bottom: 20px;
+                input {
+                    width: 50%;
+                    height: 20px;
+                    padding-bottom: 5px;
+                }
+                h6 {
+                    min-height: 20px;
+                    padding-bottom: 13px;
+                }
+                p {
+                    margin-top: 5px;
+                }
+            }
+            .field-first {
+                width: 50%;
+
+                select {
+                    width: 130px;
+                }
+
+                label {
+                    padding-right: 20px;
+                }
+            }
+            .field-second {
+                width: 30%;
+
+                input {
+                    width: 100px;
+                }
+            }
+            .field-frequency {
+                h6 {
+                    display: flex;
+                    align-items: baseline;
+
+                    input {
+                        width: 40px;
+                        margin: 0 10px;
+                        text-align: center;
+                    }
+                }
+            }
+            .field-placement {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                .field {
+                    width: 20%;
+                    input {
+                        width: 40px;
+                    }
+                }
+
+                &-st.field {
+                    width: 60%;
+                    label {
+                        margin-right: 20px;
+                    }
+                }
+            }
+        }
+        select {
+            opacity: 1;
+            display: block;
+        }
+
+        .creatives {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            &-wrapper {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                height: 100%;
+                padding: 20px;
+                border: 1px solid rgb(88, 163, 156);
+
+                .content {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 100%;
+                    height: 100%;
+                    h4 {
+                        text-align: center;
+                    }
+                }
+            }
+
+            .btn-wrapper {
+                display: flex;
+                justify-content: space-between;
+                max-width: 250px;
+            }
+        }
+
+        .saveall {
+            margin-top: 20px;
         }
     }
 }

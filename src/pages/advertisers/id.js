@@ -34,13 +34,10 @@ const AdvertId = (props) => {
     ];
 
     const pageName = async () => {
-        const data = await req(`/advertisers/${props.match.params.id}`, 'POST', {opt:{mtd: "GET"}, body: null});
-        if (data.code === 500) {
-            message(data.message);
-            return
+        const data = await req(`http://92.42.15.118:80/api/advertisers/${props.match.params.id}`, 'GET');
+        if (data) {
+            setState(data)
         }
-
-        setState(data);
     };
 
     const openEdit = function (data) {
@@ -52,8 +49,12 @@ const AdvertId = (props) => {
         setModal(!modal);
     };
     const submitEdit = async (data) => {
-        const post = await req(history.location.pathname + `/campaigns/${data.id}`, 'POST', {opt: {mtd: "PUT"}, body: data});
-        post.code === 200 ? message('SUCCESS') : message(post.message);
+        try {
+            const post = await req('http://92.42.15.118:80/api' + history.location.pathname + `/campaigns/${data.id}`, 'PUT', data);
+            message('Success')
+        } catch (e) {
+            message('Server error');
+        }
 
         paginator();
         setModal(!modal);
@@ -63,17 +64,24 @@ const AdvertId = (props) => {
         setnewGroup(val)
     }
     const newSubmit = async (state) => {
-        const post = await req(`/advertisers/${props.match.params.id}/campaigns`, 'POST', {opt: {mtd: "POST"}, body: state});
-        post.code === 200 ? message('SUCCESS') : message(post.message);
-
+        try {
+            const post = await req(`http://92.42.15.118:80/api/advertisers/${props.match.params.id}/campaigns`, 'POST', state);
+            message('Success')
+        } catch (e) {
+            message('Server error')
+        }
         paginator();
         setnewGroup(false)
     };
 
     const removeEl = async (chose) => {
         if (chose) {
-            const post = await req(history.location.pathname + `/campaigns/${props.removeItem.id}`, 'POST', {opt: {mtd: "DELETE"}, body: false});
-            post.code === 204 ? message('Deleted') : message(post.message);
+            try {
+                const post = await fetch('http://92.42.15.118:80/api' + history.location.pathname + `/campaigns/${props.removeItem.id}`, {method: 'DELETE'});
+                message('Deleted')
+            } catch (e) {
+                message('Server error');
+            }
         }
 
         props.removeModal('', '', false);
@@ -81,13 +89,10 @@ const AdvertId = (props) => {
     }
 
     const paginator = async (sort = props.currentSort.name + props.currentSort.dir, page = props.currentPage) => {
-        const data = await req(`/advertisers/${props.match.params.id}/campaigns`, 'POST', {opt: {mtd: "GET", param: `?page=${page}&pageCount=30&orderBy=${sort}`}, body: null});
-        if (data.code === 500) {
-            message(data.message);
-            return
+        const data = await req(`http://92.42.15.118:80/api/advertisers/${props.match.params.id}/campaigns?page=${page}&pageCount=30&orderBy=${sort}`, 'GET', );
+        if (data) {
+            setlist(data)
         }
-
-        setlist(data)
     }
 
     useEffect(() => {

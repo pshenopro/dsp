@@ -48,7 +48,6 @@ const EditModal = ({changeEdit, editBody, submitEdit}) => {
         )
     };
     const handleChange = (event) => {
-
         setStatus(
             sts.map((el, index) => {
                 if (index === parseInt(event.target.value)) {
@@ -308,7 +307,7 @@ const EditModal = ({changeEdit, editBody, submitEdit}) => {
                                                     type="radio"
                                                     onChange={handlePlace}
                                                     value={index}
-                                                    onClick={() => sstate.placement = index + 1}
+                                                    onClick={() => sstate.placement = index}
                                                     checked={el.val}
                                                     disabled={statusTv[0].val}/>
                                                 <span>{el.name}</span>

@@ -42,18 +42,14 @@ const CampaignsId =  (props) => {
 
     const pageName = async () => {
         try {
-            const data = await req(history.location.pathname, 'POST', {opt:{mtd: "GET"}, body: null});
+            const data = await req('http://92.42.15.118:80/api' + history.location.pathname, 'GET',);
             setstate(data);
-            console.log(history.location.pathname)
 
-            if (data.code === 500) {
-                message(data.message);
-                history.push('/advertisers')
-
-                return
+            if (data) {
+                setstate(data);
             }
 
-            const prev = await req(`/advertisers/${data.advertiserId}`, 'POST', {opt:{mtd: "GET"}, body: null});
+            const prev = await req(`http://92.42.15.118:80/api/advertisers/${data.advertiserId}`, 'GET');
 
             setNames({
                 name: data.name,
@@ -69,8 +65,12 @@ const CampaignsId =  (props) => {
         setSubGroup(val)
     };
     const newSubmit = async (state) => {
-        const post = await req(history.location.pathname + `/subgroups`, 'POST', {opt: {mtd: "POST"}, body: state});
-        post.code === 200 ? message('SUCCESS') : message(post.message);
+        try {
+            const post = await req('http://92.42.15.118:80/api' + history.location.pathname + `/subgroups`, 'POST', state);
+            message('Success')
+        } catch (e) {
+            message('Server error')
+        }
 
         paginator();
         setSubGroup(false)
@@ -84,17 +84,25 @@ const CampaignsId =  (props) => {
         setModal(!modal);
     };
     const submitEdit = async (data) => {
-        const post = await req(history.location.pathname + `/subgroups/${data.id}`, 'POST', {opt: {mtd: "PUT"}, body: data});
-        post.code === 200 ? message('SUCCESS') : message(post.message);
+        try {
+            const post = await req('http://92.42.15.118:80/api' + history.location.pathname + `/subgroups/${data.id}`, 'PUT', data);
+            message('Success')
+        } catch (e) {
+            message('Server error')
+        }
 
         paginator();
         setModal(!modal);
     }
 
     const removeEl = async (chose) => {
-        if (chose) {
-            const post = await req(history.location.pathname + `/subgroups/${props.removeItem.id}`, 'POST', {opt: {mtd: "DELETE"}, body: false});
-            post.code === 204 ? message('Deleted') : message(post.message);
+        try {
+            if (chose) {
+                const post = await fetch('http://92.42.15.118:80/api' + history.location.pathname + `/subgroups/${props.removeItem.id}`, {method: 'DELETE'});
+            }
+            message('Success')
+        } catch (e) {
+            message('Server error')
         }
 
         props.removeModal('', '', false);
@@ -102,7 +110,7 @@ const CampaignsId =  (props) => {
     }
 
     const paginator = async (sort = props.currentSort.name + props.currentSort.dir, page = props.currentPage) => {
-        const data = await req(history.location.pathname + `/subgroups`, 'POST', {opt: {mtd: "GET", param: `?page=${page}&pageCount=30&orderBy=${sort}`}, body: null});
+        const data = await req('http://92.42.15.118:80/api' + history.location.pathname + `/subgroups?page=${page}&pageCount=30&orderBy=${sort}`, 'GET');
         if (data.code === 500) {
             message(data.message);
             return

@@ -22,7 +22,7 @@ const Tablelist = ({data, changeEdit, removeModal}) => {
                 <td><NavLink to={history.location.pathname + '/subgroups/' + el.id} exact>{el.name}</NavLink></td>
                 <td>
                     <div>{type[el.type]}</div>
-                    {type[el.type] === 'Video' ? <div><i>{el.placement ? place[el.placement] : ""}</i></div> : ''}
+                    {type[el.type] === 'Video' ? <div><i>{place[el.placement]}</i></div> : ''}
                 </td>
                 <td className={'status ' + status[el.status]}>{status[el.status]}</td>
                 <td>{el.budget}</td>

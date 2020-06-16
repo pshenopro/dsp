@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from 'prop-types';
 
-const Modal = ({src, close}) => {
+const Modal = ({src, close, txt}) => {
 
 
     return (
@@ -9,9 +9,9 @@ const Modal = ({src, close}) => {
             <div id="modal1" className="modal open">
                 <i onClick={() => close()} className="material-icons small right close">close</i>
                 <div className="wrapper-fields">
-                   <iframe src={src} width='100%' height='400' frameBorder='0' id="frame">
-                   </iframe>
+                    <ul>{txt.length > 1 ? txt.map((el, index) => <li key={index}>{el}</li>) : null}</ul>
                </div>
+                {txt.length > 1 ? <a href={src} className='waves-effect waves-light btn-small'>СКАЧАТЬ</a> : ''}
             </div>
         </div>
     )
@@ -20,6 +20,7 @@ const Modal = ({src, close}) => {
 Modal.prototype = {
     src: PropTypes.string,
     close: PropTypes.func,
+    txt: PropTypes.array,
 }
 
 export default Modal;
