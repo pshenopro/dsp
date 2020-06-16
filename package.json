@@ -22,11 +22,23 @@
     "redux-thunk": "^2.3.0"
   },
   "scripts": {
+    "wp-build": "webpack --mode production",
     "start": "cross-env NODE_ENV=prod node server.js",
     "dev": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.10.2",
+    "@babel/preset-env": "^7.10.2",
+    "@babel/preset-react": "^7.10.1",
+    "babel-loader": "^8.1.0",
+    "concurrently": "^5.1.0",
+    "cross-env": "^6.0.3",
+    "html-loader": "^1.1.0",
+    "html-webpack-plugin": "^4.3.0",
+    "nodemon": "^2.0.3"
   },
   "eslintConfig": {
     "extends": "react-app"
