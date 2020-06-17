@@ -19,7 +19,7 @@ export const Advertisers = ({preloader, currentPage, setCurrentPage, removeItem,
     const message = useMessage();
     const {err, req, clear} = useHttp(preloader);
 
-    const sortThead = [{name:'Name', sort: 'name'},{name:'ID', sort: 'id'},{name:'Balance', sort: 'balance'}];
+    const sortThead = [{name:'ID', sort: 'id'}, {name:'Name', sort: 'name'},{name:'Balance', sort: 'balance'}];
 
     const openEdit = function (id, name, balance) {
         dispatch(!modal);

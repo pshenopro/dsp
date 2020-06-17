@@ -8,8 +8,8 @@ const Item = ({name, id, balance, changeEdit, removeModal}) => {
 
     return (
         <tr>
-            <td><NavLink to={'/advertisers/' + id} exact>{name}</NavLink></td>
             <td>{id}</td>
+            <td><NavLink to={'/advertisers/' + id} exact>{name}</NavLink></td>
             <td>{balance} руб.</td>
             <td>
                 <a title={'Edit'} onClick={() => changeEdit(id, name, balance)} className="btn-edit btn-table btn-floating btn-small waves-effect waves-light teal lighten-2">

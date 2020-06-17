@@ -13,7 +13,24 @@ const NewSub = props => {
         nameCamp: '',
         nameSub: ''
     });
-    const [state, setstate] = useState(null);
+    const [state, setstate] = useState({
+        bidPrice: 0,
+        budget: 0,
+        budgetSpent: 0,
+        campaignId: 1073,
+        creatives: null,
+        endDate: "2021-01-01T00:00:00",
+        startDate: "2020-01-01T00:00:00",
+        frequencyCap: {cap: 0, period: 0},
+        landingUrl: "",
+        name: "",
+        negativeTargeting: null,
+        placement: null,
+        positiveTargeting: null,
+        startPosition: 0,
+        status: 0,
+        type: 0,
+    });
     const history = useHistory();
     const message = useMessage();
     const {err, req, clear} = useHttp(props.preloader);
@@ -22,7 +39,6 @@ const NewSub = props => {
         camp = sub.split('/new')[0],
         advert = camp.split('/campaigns/')[0];
 
-    console.log(history.location.pathname)
 
     const pageName = async () => {
         try {
@@ -41,7 +57,7 @@ const NewSub = props => {
 
     const newSubmit = async (state) => {
         try {
-            const post = await req('http://92.42.15.118:80/api' + history.location.pathname + `/subgroups`, 'POST', state);
+            const post = await req('http://92.42.15.118:80/api' + history.location.pathname.split('/new')[0] + `/subgroups`, 'POST', state);
             message('Success')
         } catch (e) {
             message('Server error')
@@ -50,7 +66,7 @@ const NewSub = props => {
 
 
     useEffect(() => {
-        if (!state) {
+        if (!names.nameAdv) {
             pageName();
         }
         message(err);
@@ -77,9 +93,9 @@ const NewSub = props => {
 
             {/*CONTENT*/}
             <div className={'z-depth-3 table-wrapper'}>
-                {/*<div className="sub-group_wrapper">*/}
-                {/*    {state ? <HeadLine state={state} submit={submitSave} /> : <span>Загрузка....</span>}*/}
-                {/*</div>*/}
+                <div className="sub-group_wrapper">
+                    {state ? <HeadLine state={state} submit={newSubmit} /> : <span>Загрузка....</span>}
+                </div>
 
                 {/*{state ? <Tabs path={history.location.pathname} file={state} /> : 'Загрузка' }*/}
             </div>
