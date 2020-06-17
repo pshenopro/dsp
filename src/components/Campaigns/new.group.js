@@ -16,7 +16,6 @@ const Group = ({closeNew, submit}) => {
     const [statusTv, setStatusTv] = useState([...typeTv]);
     const [placeTv, setPlaceTv] = useState([...typePlaceTv]);
 
-
     const {changeInpIntg, changeInp, onlyNumber, sstate} = useMix({...state});
 
     const handleStatus = (event) => {

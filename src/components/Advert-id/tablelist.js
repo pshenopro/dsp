@@ -18,9 +18,9 @@ const Tablelist = ({data, changeEdit, removeModal}) => {
     return (
         <tbody>
             {data.length ? data.map((el, index) => <tr key={el.id}>
+                <td>{el.id}</td>
                 <td><NavLink to={history.location.pathname + '/campaigns/' + el.id} exact>{el.name}</NavLink></td>
                 <td className={'status ' + status[el.status]}>{status[el.status]}</td>
-                <td>{el.id}</td>
                 {/*<td>{el.advertiserId}</td>*/}
                 <td>{el.budgetSpent}</td>
                 <td>{el.budget}</td>

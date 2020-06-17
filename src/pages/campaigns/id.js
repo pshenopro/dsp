@@ -17,9 +17,7 @@ const CampaignsId =  (props) => {
         prevName: ''
     });
     const [state, setstate] = useState(null);
-    const [subGroup, setSubGroup] = useState(false);
     const [modal, setModal] = useState( false);
-    const [editBody, setEditBody] = useState(null);
     const [list, setlist] = useState([]);
 
     const history = useHistory();
@@ -27,11 +25,11 @@ const CampaignsId =  (props) => {
     const {err, req, clear} = useHttp(props.preloader);
 
     const sortThead = [
+        {name:'ID', sort: 'id'},
         {name:'Name', sort: 'name'},
         {name:'Type', sort: 'type'},
         {name:'Status', sort: 'status'},
         {name:'Budget', sort: 'budget'},
-        {name:'ID', sort: 'id'},
         {name: <span>Landing <br/>Url</span>, sort: 'landingUrl'},
         {name:'Bid Price', sort: 'bidPrice'},
         {name: <span>frequency <br/>Cap</span>, sort: 'frequencyCap'},
@@ -61,9 +59,7 @@ const CampaignsId =  (props) => {
         }
     };
 
-    const closeGroup = (val) => {
-        setSubGroup(val)
-    };
+
     const newSubmit = async (state) => {
         try {
             const post = await req('http://92.42.15.118:80/api' + history.location.pathname + `/subgroups`, 'POST', state);
@@ -71,29 +67,7 @@ const CampaignsId =  (props) => {
         } catch (e) {
             message('Server error')
         }
-
-        paginator();
-        setSubGroup(false)
     };
-
-    const openEdit = function (data) {
-        setModal(!modal);
-        setEditBody({...data});
-    };
-    const changeEdit = () => {
-        setModal(!modal);
-    };
-    const submitEdit = async (data) => {
-        try {
-            const post = await req('http://92.42.15.118:80/api' + history.location.pathname + `/subgroups/${data.id}`, 'PUT', data);
-            message('Success')
-        } catch (e) {
-            message('Server error')
-        }
-
-        paginator();
-        setModal(!modal);
-    }
 
     const removeEl = async (chose) => {
         try {
@@ -144,10 +118,10 @@ const CampaignsId =  (props) => {
             </ul>
             <div className="head">
                 <h1>{names.name ? names.name : 'Загрузка'}</h1>
-                <a onClick={() => setSubGroup(true)} className="waves-effect waves-light btn-middle btn lighten-2">
+                <NavLink to={history.location.pathname + '/new'} className="waves-effect waves-light btn-middle btn lighten-2">
                     <i className="material-icons">add</i>
                     <span>new group</span>
-                </a>
+                </NavLink>
             </div>
             {/*HEADER END*/}
 
@@ -155,7 +129,7 @@ const CampaignsId =  (props) => {
             <div className={'z-depth-3 table-wrapper sub-group_wrapper'}>
                 <table className={'highlight sub-group'}>
                     {list.data ? <TableThead sortingBy={props.sortingBy} paginator={paginator} currentSort={props.currentSort} sortThead={sortThead}/> : null}
-                    {list.data ? <TableList changeEdit={openEdit} data={list.data}/> : null}
+                    {list.data ? <TableList data={list.data}/> : null}
                 </table>
             </div>
             {/*TABLE END*/}
@@ -163,8 +137,6 @@ const CampaignsId =  (props) => {
             {list.totalPages > 1 ? <Pagination paginator={paginator} page={list.totalPages} sort={props.currentSort} /> : null}
 
             {/*MODALS*/}
-            {modal ? <Edit changeEdit={changeEdit} editBody={editBody} submitEdit={submitEdit} /> : null}
-            {subGroup ? <Newgroup closeNew={closeGroup} submit={newSubmit} /> : null}
             {props.removeItem.bool ? <RemoveModal removeEl={removeEl} name={props.removeItem.name} /> : ""}
 
         </div>

@@ -23,13 +23,11 @@ const AdvertId = (props) => {
     const {err, req, clear} = useHttp(props.preloader);
 
     const sortThead = [
+        {name:'ID', sort: 'id'},
         {name:'Group name', sort: 'name'},
         {name:'Status', sort: 'status'},
-        {name:'ID', sort: 'id'},
-        // {name:'Advertiser ID', sort: 'advertiserId'},
         {name: <span>Budget <br/>Spent</span>, sort: 'budgetSpent'},
         {name:'Budget', sort: 'budget'},
-        // {name: <span>frequency <br/>Cap</span>, sort: 'frequencyCap'},
         {name:'Date', sort: 'startDate'},
     ];
 
