@@ -54,7 +54,6 @@ const SubId = props => {
 
     }
 
-
     useEffect(() => {
         if (!state) {
             pageName();
@@ -76,9 +75,6 @@ const SubId = props => {
                 <i className="material-icons small">keyboard_arrow_right</i>
                 <span>{names.nameSub ? names.nameSub : 'Загрузка'}</span>
             </ul>
-            <div className="head">
-                <h1>{names.nameSub ? names.nameSub : 'Загрузка'}</h1>
-            </div>
             {/*HEADER END*/}
 
             {/*CONTENT*/}

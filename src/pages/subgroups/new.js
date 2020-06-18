@@ -23,7 +23,7 @@ const NewSub = props => {
         startDate: "2020-01-01T00:00:00",
         frequencyCap: {cap: 0, period: 0},
         landingUrl: "",
-        name: "",
+        name: "New NAME",
         negativeTargeting: null,
         placement: null,
         positiveTargeting: null,
@@ -59,11 +59,13 @@ const NewSub = props => {
         try {
             const post = await req('http://92.42.15.118:80/api' + history.location.pathname.split('/new')[0] + `/subgroups`, 'POST', state);
             message('Success')
+            if (post) {
+                props.history.push(history.location.pathname.split('new')[0] + `subgroups/` + post.id)
+            }
         } catch (e) {
             message('Server error')
         }
     };
-
 
     useEffect(() => {
         if (!names.nameAdv) {
@@ -86,9 +88,7 @@ const NewSub = props => {
                 <i className="material-icons small">keyboard_arrow_right</i>
                 <span> New sub group</span>
             </ul>
-            <div className="head">
-                <h1>New sub group</h1>
-            </div>
+
             {/*HEADER END*/}
 
             {/*CONTENT*/}
@@ -97,7 +97,7 @@ const NewSub = props => {
                     {state ? <HeadLine state={state} submit={newSubmit} /> : <span>Загрузка....</span>}
                 </div>
 
-                {/*{state ? <Tabs path={history.location.pathname} file={state} /> : 'Загрузка' }*/}
+                {state.id ? <Tabs path={history.location.pathname} file={state} /> : '' }
             </div>
             {/*CONTENT END*/}
 

@@ -25,7 +25,7 @@ const Pagination = ({page, paginator, currentPage, setCurrentPage, sort}) => {
         <ul className="pagination">
             <button
                 type={'button'}
-                onClick={() => checkCur(currentPage-1)}
+                onClick={() => checkCur(currentPage - 1)}
                 className={currentPage === 1 ? 'disabled' : 'waves-effect'}
                 disabled={currentPage === 1}>
                 <i className="material-icons">chevron_left</i>

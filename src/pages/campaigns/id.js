@@ -59,16 +59,6 @@ const CampaignsId =  (props) => {
         }
     };
 
-
-    const newSubmit = async (state) => {
-        try {
-            const post = await req('http://92.42.15.118:80/api' + history.location.pathname + `/subgroups`, 'POST', state);
-            message('Success')
-        } catch (e) {
-            message('Server error')
-        }
-    };
-
     const removeEl = async (chose) => {
         try {
             if (chose) {
