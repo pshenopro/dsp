@@ -400,10 +400,24 @@ body {
 
                 .content-control {
                     position: absolute;
+                    display: flex;
+                    justify-content: space-between;
                     width: 100%;
                     left: 0;
                     right: 0;
                     top: 140px;
+                    button {
+                        outline: none !important;
+                        border: none !important;
+                        background: none !important;
+                    }
+                    button[disabled] {
+                        cursor: default;
+                        i {
+                            color: #e6e6e6;
+                            cursor: default;
+                        }
+                    }
                     i {
                         color: #9F9F9F;
                         transition: all .3s;

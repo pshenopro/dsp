@@ -94,7 +94,7 @@ const NewSub = props => {
             {/*CONTENT*/}
             <div className={'z-depth-3 table-wrapper'}>
                 <div className="sub-group_wrapper">
-                    {state ? <HeadLine state={state} submit={newSubmit} /> : <span>Загрузка....</span>}
+                    {state ? <HeadLine state={state} submit={newSubmit} post={() => ''} /> : <span>Загрузка....</span>}
                 </div>
 
                 {state.id ? <Tabs path={history.location.pathname} file={state} /> : '' }

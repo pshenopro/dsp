@@ -2,24 +2,23 @@ import React, {useContext, useEffect, useState} from "react";
 import {useMix} from "../../hooks/mix.hook";
 import {AppContext} from "../../context/AppContext";
 import PropTypes from 'prop-types';
-import {useMessage} from "../../hooks/msg.hook";
 import Loader from '../creative.preloader'
 
-const Head = ({state, submit}) => {
+const Head = ({state, submit, post}) => {
     const {status, typeTv, typePlaceTv} = useContext(AppContext);
     let counter = 1;
 
-    const message = useMessage();
     const [sts, setStatus] = useState([...status]);
     const [statusTv, setStatusTv] = useState([...typeTv]);
     const [placeTv, setPlaceTv] = useState([...typePlaceTv]);
     const {changeInpIntg, changeInp, onlyNumber, sstate} = useMix({
         ...state,
         ...state.frequencyCap,
-        creatives:['https://www.youtube.com/embed/9No-FiEInLA', 'https://www.youtube.com/embed/VkzVgiYUEIM']
+        creatives:[1, 2, 3, 4, 5]
     });
-    let [creatives, setCreatives] = useState(0)
-    const [currentSlide, setCurrent] = useState(0)
+    const [currentSlide, setCurrent] = useState(0);
+    const [creatives, setCreatives] = useState('');
+    const [load, setLoad] = useState(false);
 
     const handlePlace = (event) => {
         setPlaceTv(
@@ -63,10 +62,15 @@ const Head = ({state, submit}) => {
         sstate.status = parseInt(event.target.value);
     };
 
-    const postSlide = async (val) => {
-        const post = false;
-        setCreatives(creatives++)
-        console.log(creatives)
+    const postSlide = async (val = currentSlide) => {
+        setLoad(true)
+        setCurrent(val)
+
+        let data = await post(sstate.creatives[val]);
+        setCreatives(data.name);
+        await setTimeout(function () {
+            setLoad(false)
+        }, 1000)
     }
 
     const saveAll = (event) => {
@@ -84,6 +88,9 @@ const Head = ({state, submit}) => {
     }
 
     useEffect(() => {
+        if (sstate.creatives) {
+            postSlide();
+        }
         if (counter === 1) {
             setPlaceTv(
                 placeTv.map((el, index) => {
@@ -255,17 +262,27 @@ const Head = ({state, submit}) => {
                 <div className="creatives">
                     <h6> Attached creatives</h6>
                     <div className={'creatives-wrapper'}>
-                        <div className="content-control">
-                            <i className="material-icons left large">keyboard_arrow_left
-                            </i>
-                            <i className="material-icons right large">keyboard_arrow_right
-                            </i>
-                        </div>
+                        {sstate.creatives ? <div className="content-control">
+                            <button type={"button"}
+                                    onClick={() => postSlide(currentSlide - 1, )}
+                                    disabled={currentSlide === 0}>
+                                <i className="material-icons left large">
+                                    keyboard_arrow_left
+                                </i>
+                            </button>
+                            <button type={"button"}
+                                    onClick={() => postSlide(currentSlide + 1)}
+                                    disabled={sstate.creatives.length - 1 === currentSlide}>
+                                <i className="material-icons right large">
+                                    keyboard_arrow_right
+                                </i>
+                            </button>
+                        </div> : ''}
                         <div className="content">
-                            {sstate.creatives ? <iframe src={sstate.creatives[creatives]}
+                            {sstate.creatives && !load ? <iframe srcDoc={`<html><head><body>${JSON.stringify(creatives)}</body></head></html>`}
                                                         frameBorder="0"
                                                         allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                                                        allowFullScreen></iframe> : <Loader/>}
+                                                        allowFullScreen> </iframe > : <Loader/>}
                         </div>
 
                         <div className="btn-wrapper">
@@ -287,6 +304,7 @@ const Head = ({state, submit}) => {
 Head.propTypes = {
     state: PropTypes.object,
     submit: PropTypes.func,
+    post: PropTypes.func,
 }
 
 export default Head;

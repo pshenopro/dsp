@@ -54,6 +54,14 @@ const SubId = props => {
 
     }
 
+    const postCreat = async (val) => {
+        try {
+            return await req('http://starwars.andgein.ru/api/people/' + val);
+        } catch (e) {
+            message("Ошибка в обработке креатива")
+        }
+    }
+
     useEffect(() => {
         if (!state) {
             pageName();
@@ -80,7 +88,7 @@ const SubId = props => {
             {/*CONTENT*/}
             <div className={'z-depth-3 table-wrapper'}>
                 <div className="sub-group_wrapper">
-                    {state ? <HeadLine state={state} submit={submitSave} /> : <span>Загрузка....</span>}
+                    {state ? <HeadLine state={state} submit={submitSave} post={postCreat}/> : <span>Загрузка....</span>}
                 </div>
 
                 {state ? <Tabs path={history.location.pathname} file={state} /> : 'Загрузка' }
