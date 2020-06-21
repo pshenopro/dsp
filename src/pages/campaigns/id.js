@@ -40,14 +40,14 @@ const CampaignsId =  (props) => {
 
     const pageName = async () => {
         try {
-            const data = await req('http://92.42.15.118:80/api' + history.location.pathname, 'GET',);
+            const data = await req(process.env.REACT_APP_API + 'api' + history.location.pathname, 'GET',);
             setstate(data);
 
             if (data) {
                 setstate(data);
             }
 
-            const prev = await req(`http://92.42.15.118:80/api/advertisers/${data.advertiserId}`, 'GET');
+            const prev = await req(process.env.REACT_APP_API + `api/advertisers/${data.advertiserId}`, 'GET');
 
             setNames({
                 name: data.name,
@@ -62,7 +62,7 @@ const CampaignsId =  (props) => {
     const removeEl = async (chose) => {
         try {
             if (chose) {
-                const post = await fetch('http://92.42.15.118:80/api' + history.location.pathname + `/subgroups/${props.removeItem.id}`, {method: 'DELETE'});
+                const post = await fetch(process.env.REACT_APP_API + 'api' + history.location.pathname + `/subgroups/${props.removeItem.id}`, {method: 'DELETE'});
             }
             message('Success')
         } catch (e) {
@@ -74,7 +74,7 @@ const CampaignsId =  (props) => {
     }
 
     const paginator = async (sort = props.currentSort.name + props.currentSort.dir, page = props.currentPage) => {
-        const data = await req('http://92.42.15.118:80/api' + history.location.pathname + `/subgroups?page=${page}&pageCount=30&orderBy=${sort}`, 'GET');
+        const data = await req(process.env.REACT_APP_API + 'api' + history.location.pathname + `/subgroups?page=${page}&pageCount=30&orderBy=${sort}`, 'GET');
         if (data.code === 500) {
             message(data.message);
             return

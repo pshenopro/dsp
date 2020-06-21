@@ -32,7 +32,7 @@ const AdvertId = (props) => {
     ];
 
     const pageName = async () => {
-        const data = await req(`http://92.42.15.118:80/api/advertisers/${props.match.params.id}`, 'GET');
+        const data = await req(process.env.REACT_APP_API + `api/advertisers/${props.match.params.id}`, 'GET');
         if (data) {
             setState(data)
         }
@@ -48,7 +48,7 @@ const AdvertId = (props) => {
     };
     const submitEdit = async (data) => {
         try {
-            const post = await req('http://92.42.15.118:80/api' + history.location.pathname + `/campaigns/${data.id}`, 'PUT', data);
+            const post = await req(process.env.REACT_APP_API + 'api' + history.location.pathname + `/campaigns/${data.id}`, 'PUT', data);
             message('Success')
         } catch (e) {
             message('Server error');
@@ -63,7 +63,7 @@ const AdvertId = (props) => {
     }
     const newSubmit = async (state) => {
         try {
-            const post = await req(`http://92.42.15.118:80/api/advertisers/${props.match.params.id}/campaigns`, 'POST', state);
+            const post = await req(process.env.REACT_APP_API + `api/advertisers/${props.match.params.id}/campaigns`, 'POST', state);
             message('Success')
         } catch (e) {
             message('Server error')
@@ -75,7 +75,7 @@ const AdvertId = (props) => {
     const removeEl = async (chose) => {
         if (chose) {
             try {
-                const post = await fetch('http://92.42.15.118:80/api' + history.location.pathname + `/campaigns/${props.removeItem.id}`, {method: 'DELETE'});
+                const post = await fetch(process.env.REACT_APP_API + 'api' + history.location.pathname + `/campaigns/${props.removeItem.id}`, {method: 'DELETE'});
                 message('Deleted')
             } catch (e) {
                 message('Server error');
@@ -87,7 +87,7 @@ const AdvertId = (props) => {
     }
 
     const paginator = async (sort = props.currentSort.name + props.currentSort.dir, page = props.currentPage) => {
-        const data = await req(`http://92.42.15.118:80/api/advertisers/${props.match.params.id}/campaigns?page=${page}&pageCount=30&orderBy=${sort}`, 'GET', );
+        const data = await req(process.env.REACT_APP_API + `api/advertisers/${props.match.params.id}/campaigns?page=${page}&pageCount=30&orderBy=${sort}`, 'GET', );
         if (data) {
             setlist(data)
         }

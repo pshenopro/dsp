@@ -42,8 +42,8 @@ const NewSub = props => {
 
     const pageName = async () => {
         try {
-            const prev = await req('http://92.42.15.118:80/api' + camp, 'GET');
-            const prevPre = await req('http://92.42.15.118:80/api' + advert, 'GET');
+            const prev = await req(process.env.REACT_APP_API + 'api' + camp, 'GET');
+            const prevPre = await req(process.env.REACT_APP_API + 'api' + advert, 'GET');
 
             setNames({
                 nameAdv: prevPre.name,
@@ -57,7 +57,7 @@ const NewSub = props => {
 
     const newSubmit = async (state) => {
         try {
-            const post = await req('http://92.42.15.118:80/api' + history.location.pathname.split('/new')[0] + `/subgroups`, 'POST', state);
+            const post = await req(process.env.REACT_APP_API + 'api' + history.location.pathname.split('/new')[0] + `/subgroups`, 'POST', state);
             message('Success')
             if (post) {
                 props.history.push(history.location.pathname.split('new')[0] + `subgroups/` + post.id)

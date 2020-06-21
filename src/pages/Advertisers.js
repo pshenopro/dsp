@@ -37,7 +37,7 @@ export const Advertisers = ({preloader, currentPage, setCurrentPage, removeItem,
     };
     const submitEdit = async (data) => {
         try {
-            const post = await req('http://92.42.15.118:80/api/advertisers/' + data.id, 'PUT', data);
+            const post = await req(process.env.REACT_APP_API + 'api/advertisers/' + data.id, 'PUT', data);
             message('Success')
         } catch (e) {
             message('Error')
@@ -49,7 +49,7 @@ export const Advertisers = ({preloader, currentPage, setCurrentPage, removeItem,
 
     const newSubmit = async (data) => {
         try {
-            const post = await req('http://92.42.15.118:80/api/advertisers/', 'POST', data);
+            const post = await req(process.env.REACT_APP_API + 'api/advertisers/', 'POST', data);
             message('Success')
         } catch (e) {
             message('Error')
@@ -65,7 +65,7 @@ export const Advertisers = ({preloader, currentPage, setCurrentPage, removeItem,
     const removeEl = async (chose) => {
       if (chose) {
           try {
-              const post = await fetch('http://92.42.15.118:80/api/advertisers/' + removeItem.id, {method: 'DELETE'} );
+              const post = await fetch(process.env.REACT_APP_API + 'api/advertisers/' + removeItem.id, {method: 'DELETE'} );
               message('Deleted')
           } catch (e) {
               message('Server error');
@@ -77,7 +77,7 @@ export const Advertisers = ({preloader, currentPage, setCurrentPage, removeItem,
     }
 
     const paginator = async (sort = currentSort.name + currentSort.dir, page = currentPage) => {
-        const data = await req(`http://92.42.15.118:80/api/advertisers?page=${page}&pageCount=30&orderBy=${sort}`, 'GET');
+        const data = await req(process.env.REACT_APP_API + `api/advertisers?page=${page}&pageCount=30&orderBy=${sort}`, 'GET');
         if (data.status === 500) {
             message(data.message);
             return

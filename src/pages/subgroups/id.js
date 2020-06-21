@@ -24,14 +24,14 @@ const SubId = props => {
 
     const pageName = async () => {
         try {
-            const data = await req('http://92.42.15.118:80/api' + history.location.pathname, 'GET');
+            const data = await req(process.env.REACT_APP_API + 'api' + history.location.pathname, 'GET');
 
             if (data) {
                 setstate(data);
             }
 
-            const prev = await req('http://92.42.15.118:80/api' + camp, 'GET');
-            const prevPre = await req('http://92.42.15.118:80/api' + advert, 'GET');
+            const prev = await req(process.env.REACT_APP_API + 'api' + camp, 'GET');
+            const prevPre = await req(process.env.REACT_APP_API + 'api' + advert, 'GET');
 
             setNames({
                 nameAdv: prevPre.name,
@@ -46,7 +46,7 @@ const SubId = props => {
 
     const submitSave = async (data) => {
         try {
-            const post = await req('http://92.42.15.118:80/api' + history.location.pathname, 'PUT', data);
+            const post = await req(process.env.REACT_APP_API + 'api' + history.location.pathname, 'PUT', data);
             message('Success')
         } catch (e) {
             message('Server error');

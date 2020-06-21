@@ -16,7 +16,7 @@ const Tabs = ({path, file}) => {
 
     const handlerModal = async (val) => {
         setTxt([]);
-        const post = await fetch('http://92.42.15.118:80/api' + path + '/' + val, {
+        const post = await fetch(process.env.REACT_APP_API + 'api' + path + '/' + val, {
             method: 'GET',
             body: null,
             headers: {
@@ -27,7 +27,7 @@ const Tabs = ({path, file}) => {
                 return text.split(/\n/ig)
             })
         })
-        setSrc('http://92.42.15.118:80/api' + path + '/' + val);
+        setSrc(process.env.REACT_APP_API + 'api' + path + '/' + val);
         setTxt(post);
         setModal(!modal)
     }
@@ -42,7 +42,7 @@ const Tabs = ({path, file}) => {
         const _formdata = new FormData();
         _formdata.append(http, event.target.files[0]);
 
-        axios.post( 'http://92.42.15.118:80/api' + path + '/' + http.toLowerCase() + '?' + flag, _formdata, {
+        axios.post( process.env.REACT_APP_API + 'api' + path + '/' + http.toLowerCase() + '?' + flag, _formdata, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
